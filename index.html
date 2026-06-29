@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2P | Select Player</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Link to custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Outer Monitor Bezel -->
+    <div class="monitor-bezel">
+        <!-- Inner Screen with CRT effect -->
+        <div class="monitor-screen crt">
+            
+            <!-- SCENE 1: PLAYER SELECT -->
+            <div id="view-select" class="game-view active flex flex-col items-center">
+                <!-- Top Nav -->
+                <div class="w-full flex justify-center md:justify-end gap-6 md:gap-8 p-2 md:p-4 shrink-0 mb-4 md:mb-0">
+                    <button class="nav-tab active">SELECT PLAYER</button>
+                    <button class="nav-tab" onclick="switchView('view-all-projects')">PROJECTS</button>
+                </div>
+
+                <div class="text-center mb-8 shrink-0">
+                    <h2 class="title-presentation text-sm md:text-xl text-slate-400 tracking-[0.3em] mb-2">PROMPT-TO-PLAY PORTFOLIO</h2>
+                    <h1 class="title-main text-3xl md:text-5xl font-bold text-white blink-text tracking-widest">SELECT PLAYER</h1>
+                </div>
+
+                <div class="player-select-container">
+                    
+                    <!-- Player 1 Select Card -->
+                    <div class="player-card p1" onclick="switchView('view-p1')" onmouseenter="this.querySelector('img').src='./assets/dc1.png'" onmouseleave="this.querySelector('img').src='./assets/dc.png'">
+                        <img src="./assets/dc.png" alt="Trần Tấn Vạn" class="player-avatar">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-2 uppercase">Trần Tấn Vạn</h2>
+                        <p class="text-[#38bdf8] font-semibold tracking-widest uppercase text-xs md:text-sm mb-6">Game Developer</p>
+                        <div class="bg-black/50 px-4 py-2 rounded border border-gray-800 text-xs text-gray-400 uppercase tracking-widest">
+                            Press Start
+                        </div>
+                    </div>
+
+                    <div class="vs-text text-3xl md:text-4xl font-bold text-gray-700 italic shrink-0">VS</div>
+
+                    <!-- Player 2 Select Card -->
+                    <div class="player-card p2" onclick="switchView('view-p2')" onmouseenter="this.querySelector('img').src='./assets/htl1.png'" onmouseleave="this.querySelector('img').src='./assets/htl.png'">
+                        <img src="./assets/htl.png" alt="Lê Hữu Thịnh" class="player-avatar">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-2 uppercase">Lê Hữu Thịnh</h2>
+                        <p class="text-[#f472b6] font-semibold tracking-widest uppercase text-xs md:text-sm mb-6">UI/UX Designer</p>
+                        <div class="bg-black/50 px-4 py-2 rounded border border-gray-800 text-xs text-gray-400 uppercase tracking-widest">
+                            Press Start
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SCENE 2: PLAYER 1 (VAN) DETAILS -->
+            <div id="view-p1" class="game-view">
+                <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#0a0f1a]/95 py-3 z-50 backdrop-blur-sm border-b border-gray-800">
+                    <button class="btn-back text-xs md:text-sm" onclick="switchView('view-select', true)">
+                        <i class="fa-solid fa-caret-left mr-2"></i> SELECT SCREEN
+                    </button>
+                    <div class="text-[#38bdf8] font-bold tracking-widest text-sm md:text-xl">PLAYER 1 STATS</div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
+                    
+                    <!-- Left: Character Stats -->
+                    <div class="lg:col-span-4 flex flex-col gap-6">
+                        <div class="stat-box text-center border-t-4 border-t-[#38bdf8]">
+                            <img src="./assets/dc.png" class="player-avatar-small mx-auto rounded-full border-4 border-[#38bdf8] mb-4 bg-black">
+                            <h2 class="text-2xl md:text-3xl font-bold text-white uppercase">Trần Tấn Vạn</h2>
+                            <p class="text-[#38bdf8] font-bold text-xs md:text-sm tracking-widest mb-4">GAME DEV & TESTER</p>
+                            <p class="text-gray-400 text-xs md:text-sm leading-relaxed text-left mb-4 italic">
+                                "Information Technology graduate with experience building 2D mobile puzzle, casual/hypercasual games in Unity using C#. Focused on gameplay programming, logic optimization, and QA testing."
+                            </p>
+                            <div class="flex justify-center gap-4 border-t border-gray-800 pt-4">
+                                <a href="https://github.com/VanTrannnn" target="_blank" class="text-gray-400 hover:text-[#38bdf8] text-xl"><i class="fa-brands fa-github"></i></a>
+                                <a href="https://vantrannnn.itch.io/" target="_blank" class="text-gray-400 hover:text-[#38bdf8] text-xl"><i class="fa-brands fa-itch-io"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="stat-box">
+                            <h3 class="text-gray-500 font-bold tracking-widest text-[10px] md:text-xs mb-3 uppercase">Inventory / Skills</h3>
+                            <ul class="space-y-2 text-xs md:text-sm text-gray-300">
+                                <li><span class="text-[#38bdf8]">></span> <strong>Engine:</strong> Unity (2D, UI, Mechanics)</li>
+                                <li><span class="text-[#38bdf8]">></span> <strong>Language:</strong> C#, C++, Python</li>
+                                <li><span class="text-[#38bdf8]">></span> <strong>QA:</strong> Bug fixing, Logic testing</li>
+                                <li><span class="text-[#38bdf8]">></span> <strong>Honors:</strong> ICPC '23, MOS Cert '23</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Project Levels (IMAGE CARDS) -->
+                    <div class="lg:col-span-8 flex flex-col">
+                        <h3 class="text-xl md:text-2xl font-bold text-white uppercase mb-4 md:mb-6 border-b border-gray-800 pb-2">Completed Levels</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            
+                            <!-- P1 Project 1 Card -->
+                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('parking-car')">
+                                <img src="./assets/VanPrj/parking/parkingcar.png" alt="Parking Car" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
+                                <div class="absolute bottom-0 left-0 p-4 w-full">
+                                    <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Pathfinding Puzzle</span>
+                                    <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Parking Car</h4>
+                                    <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#38bdf8]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                                </div>
+                            </div>
+
+                            <!-- P1 Project 2 Card -->
+                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('ball-nim')">
+                                <img src="./assets/VanPrj/ballnim/nim.png" alt="Ball Nim" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
+                                <div class="absolute bottom-0 left-0 p-4 w-full">
+                                    <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Logic Strategy</span>
+                                    <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Ball Nim</h4>
+                                    <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#38bdf8]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                                </div>
+                            </div>
+
+                            <!-- P1 Project 3 Card -->
+                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('word-game')">
+                                <img src="./assets/VanPrj/wordgame/word.png" alt="Word Game" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
+                                <div class="absolute bottom-0 left-0 p-4 w-full">
+                                    <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Word Puzzle</span>
+                                    <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Word Game</h4>
+                                    <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#38bdf8]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCENE 3: PLAYER 2 (THINH) DETAILS -->
+            <div id="view-p2" class="game-view">
+                <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#0a0f1a]/95 py-3 z-50 backdrop-blur-sm border-b border-gray-800">
+                    <button class="btn-back text-xs md:text-sm" onclick="switchView('view-select', true)">
+                        <i class="fa-solid fa-caret-left mr-2"></i> SELECT SCREEN
+                    </button>
+                    <div class="text-[#f472b6] font-bold tracking-widest text-sm md:text-xl">PLAYER 2 STATS</div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
+                    
+                    <!-- Left: Character Stats -->
+                    <div class="lg:col-span-4 flex flex-col gap-6">
+                        <div class="stat-box text-center border-t-4 border-t-[#f472b6]">
+                            <img src="./assets/htl.png" class="player-avatar-small mx-auto rounded-full border-4 border-[#f472b6] mb-4 bg-black">
+                            <h2 class="text-2xl md:text-3xl font-bold text-white uppercase">Lê Hữu Thịnh</h2>
+                            <p class="text-[#f472b6] font-bold text-xs md:text-sm tracking-widest mb-4">UI/UX DESIGNER</p>
+                            <p class="text-gray-400 text-xs md:text-sm leading-relaxed text-left mb-4 italic">
+                                "Passionate UI/UX Designer dedicated to crafting engaging and intuitive digital experiences. Specializing in game interfaces, wireframing, and visual aesthetics."
+                            </p>
+                            <div class="flex justify-center gap-4 border-t border-gray-800 pt-4">
+                                <a href="https://thinh-le-huu.figma.site/" target="_blank" class="text-gray-400 hover:text-[#f472b6] text-xl"><i class="fa-brands fa-figma"></i></a>
+                                <a href="#" class="text-gray-400 hover:text-[#f472b6] text-xl"><i class="fa-brands fa-behance"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="stat-box">
+                            <h3 class="text-gray-500 font-bold tracking-widest text-[10px] md:text-xs mb-3 uppercase">Inventory / Skills</h3>
+                            <ul class="space-y-2 text-xs md:text-sm text-gray-300">
+                                <li><span class="text-[#f472b6]">></span> <strong>Tools:</strong> Figma, Adobe Suite</li>
+                                <li><span class="text-[#f472b6]">></span> <strong>Role:</strong> Game UI, Prototyping</li>
+                                <li><span class="text-[#f472b6]">></span> <strong>UX:</strong> Player Journey, Wireframing</li>
+                                <li><span class="text-[#f472b6]">></span> <strong>Art:</strong> Visual Hierarchy, 2D Assets</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Project Levels (IMAGE CARDS) -->
+                    <div class="lg:col-span-8 flex flex-col">
+                        <h3 class="text-xl md:text-2xl font-bold text-white uppercase mb-4 md:mb-6 border-b border-gray-800 pb-2">Completed Levels</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            
+                            <!-- P2 Project 1 Card -->
+                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all" onclick="openModal('ui-showcase')">
+                                <img src="./assets/ui-bg.png" alt="UI Showcase" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
+                                <div class="absolute bottom-0 left-0 p-4 w-full">
+                                    <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">Video / Prototype</span>
+                                    <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">Game UI Showcase</h4>
+                                    <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#f472b6]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                                </div>
+                            </div>
+
+                            <!-- P2 Project 2 Card Placeholder -->
+                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all" onclick="openModal('ui-design')">
+                                <div class="absolute inset-0 bg-gray-900 opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                                <div class="absolute bottom-0 left-0 p-4 w-full">
+                                    <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">UI Design</span>
+                                    <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">[Project Name]</h4>
+                                    <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#f472b6]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCENE 4: ALL PROJECTS -->
+            <div id="view-all-projects" class="game-view flex flex-col items-center">
+                <!-- Top Nav -->
+                <div class="w-full flex justify-center md:justify-end gap-6 md:gap-8 p-2 md:p-4 shrink-0 mb-4 md:mb-0">
+                    <button class="nav-tab" onclick="switchView('view-select')">SELECT PLAYER</button>
+                    <button class="nav-tab active">PROJECTS</button>
+                </div>
+
+                <div class="w-full max-w-6xl pb-8">
+                    <div class="text-center mb-10">
+                        <h1 class="text-3xl md:text-5xl font-bold text-white blink-text tracking-widest mb-2">ALL PROJECTS</h1>
+                        <p class="text-slate-400 text-sm md:text-base tracking-wider">LEVELS CREATED BY G-SPARK STUDIO</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- P1 Projects -->
+                        <div class="relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('parking-car')">
+                            <div class="absolute top-3 left-3 bg-[#38bdf8] text-black text-[10px] md:text-xs font-bold px-2 py-1 rounded z-10 shadow-lg">PLAYER 1 - VẠN</div>
+                            <img src="./assets/VanPrj/parking/parkingcar.png" alt="Parking Car" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4 w-full">
+                                <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Pathfinding Puzzle</span>
+                                <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Parking Car</h4>
+                                <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#38bdf8]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                            </div>
+                        </div>
+
+                        <div class="relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('ball-nim')">
+                            <div class="absolute top-3 left-3 bg-[#38bdf8] text-black text-[10px] md:text-xs font-bold px-2 py-1 rounded z-10 shadow-lg">PLAYER 1 - VẠN</div>
+                            <img src="./assets/VanPrj/ballnim/nim.png" alt="Ball Nim" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4 w-full">
+                                <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Logic Strategy</span>
+                                <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Ball Nim</h4>
+                                <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#38bdf8]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                            </div>
+                        </div>
+
+                        <div class="relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('word-game')">
+                            <div class="absolute top-3 left-3 bg-[#38bdf8] text-black text-[10px] md:text-xs font-bold px-2 py-1 rounded z-10 shadow-lg">PLAYER 1 - VẠN</div>
+                            <img src="./assets/VanPrj/wordgame/word.png" alt="Word Game" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4 w-full">
+                                <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Word Puzzle</span>
+                                <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Word Game</h4>
+                                <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#38bdf8]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                            </div>
+                        </div>
+
+                        <!-- P2 Projects -->
+                        <div class="relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all" onclick="openModal('ui-showcase')">
+                            <div class="absolute top-3 left-3 bg-[#f472b6] text-black text-[10px] md:text-xs font-bold px-2 py-1 rounded z-10 shadow-lg">PLAYER 2 - THỊNH</div>
+                            <img src="./assets/ui-bg.png" alt="Game UI Showcase" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4 w-full">
+                                <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">Video / Prototype</span>
+                                <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">Game UI Showcase</h4>
+                                <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#f472b6]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL UI: PROJECT DETAILS -->
+            <div id="project-modal" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300" onclick="closeModal(event)">
+                <!-- Ngăn thao tác click lan ra ngoài modal -->
+                <div class="bg-[#0a0f1a] border-2 border-gray-700 rounded-xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl transform scale-95 transition-transform duration-300" id="modal-content" onclick="event.stopPropagation()">
+                    
+                    <!-- Header -->
+                    <div class="flex justify-between items-start p-4 md:p-6 border-b border-gray-800">
+                        <div>
+                            <span id="modal-badge" class="text-[10px] md:text-xs px-2 py-1 rounded border font-bold">Badge</span>
+                            <h2 id="modal-title" class="text-2xl md:text-3xl font-bold text-white uppercase mt-2">Title</h2>
+                        </div>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
+                    </div>
+                    
+                    <!-- Body (Scrollable) -->
+                    <div class="flex-grow overflow-y-auto p-4 md:p-6 flex flex-col lg:flex-row gap-6 lg:gap-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                        
+                        <!-- Images Gallery -->
+                        <div class="lg:w-3/5 flex flex-col gap-3">
+                            <!-- Đã thêm ID 'modal-img-container' để dễ dàng đổi CSS dọc ngang bằng Javascript -->
+                            <div id="modal-img-container" class="w-full h-48 md:h-80 bg-black rounded-lg border border-gray-700 overflow-hidden relative flex justify-center items-center">
+                                <img id="modal-main-img" src="" class="w-full h-full object-cover transition-opacity duration-300">
+                            </div>
+                            <!-- Thumbnails -->
+                            <div id="modal-thumbnails" class="flex gap-2 overflow-x-auto pb-2 justify-center lg:justify-start [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                                <!-- JS inserts thumbnails here -->
+                            </div>
+                        </div>
+
+                        <!-- Description & Links -->
+                        <div class="lg:w-2/5 flex flex-col">
+                            <h3 class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-3">Project Details</h3>
+                            <p id="modal-desc" class="text-sm md:text-base text-gray-300 leading-relaxed mb-6"></p>
+                            
+                            <div class="mt-auto pt-6 border-t border-gray-800/50">
+                                <h3 class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-3">Available Links</h3>
+                                <div id="modal-links" class="flex flex-wrap gap-3">
+                                    <!-- JS inserts links here -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Screen Switching, Modal & Audio Logic -->
+    <script>
+        // === AUDIO SYSTEM (RETRO 8-BIT SOUNDS) ===
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Hàm tạo âm thanh synth cơ bản
+        function playTone(freq, type, duration, vol) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            
+            gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration);
+        }
+
+        function playHoverSound() {
+            if(!audioCtx) return; // Bỏ qua nếu người dùng chưa tương tác lần nào
+            playTone(440, 'square', 0.1, 0.02);
+        }
+
+        function playSelectSound() {
+            initAudio();
+            playTone(600, 'square', 0.1, 0.05);
+            setTimeout(() => playTone(800, 'square', 0.15, 0.05), 100);
+        }
+
+        function playBackSound() {
+            initAudio();
+            playTone(300, 'sawtooth', 0.1, 0.05);
+            setTimeout(() => playTone(200, 'sawtooth', 0.15, 0.05), 100);
+        }
+
+        // Gắn sự kiện Hover cho các phần tử UI
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lắng nghe click đầu tiên trên toàn trang để khởi tạo audio (Luật của trình duyệt)
+            document.body.addEventListener('click', initAudio, { once: true });
+
+            const hoverElements = document.querySelectorAll('.nav-tab, .player-card, .cursor-pointer, .btn-back, a, button');
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    playHoverSound();
+                });
+            });
+        });
+
+
+        // === VIEW SWITCHING ===
+        function switchView(targetViewId, isBack = false) {
+            // Phát âm thanh tương ứng
+            if (isBack) {
+                playBackSound();
+            } else {
+                playSelectSound();
+            }
+
+            const views = document.querySelectorAll('.game-view');
+            views.forEach(view => {
+                view.classList.remove('active');
+            });
+            const targetView = document.getElementById(targetViewId);
+            if(targetView) {
+                targetView.classList.add('active');
+                targetView.scrollTop = 0; 
+            }
+        }
+
+        // === PROJECT DATA ===
+        const projectsData = {
+            'parking-car': {
+                title: 'Parking Car',
+                badge: 'Pathfinding Puzzle',
+                color: '#38bdf8',
+                desc: 'Unity puzzle game where players draw paths to park cars while avoiding dynamic obstacles. 10 progressive levels designed with increasing difficulty. Implemented Line Renderer mechanics and complex collision logic.',
+                images: ['./assets/VanPrj/parking/parking1.png', './assets/VanPrj/parking/parking2.png', './assets/VanPrj/parking/parking3.png'],
+                links: `
+                    <a href="https://vantrannnn.itch.io/parking-car" target="_blank" class="text-xs font-bold text-black bg-[#38bdf8] px-4 py-2 rounded hover:bg-white transition-colors">PLAY GAME</a>
+                    <a href="https://github.com/VanTrannnn/ParkingCar" target="_blank" class="text-xs font-bold text-[#38bdf8] border border-[#38bdf8] px-4 py-2 rounded hover:bg-[#38bdf8] hover:text-black transition-colors">GITHUB</a>
+                `
+            },
+            'ball-nim': {
+                title: 'Ball Nim',
+                badge: 'Logic Strategy',
+                color: '#38bdf8',
+                desc: 'Mathematical strategy game based on the classic Nim logic, challenging players to optimize moves and outsmart AI. Implemented an intelligent AI opponent utilizing the Nim-sum mathematical algorithm for three difficulty levels. Developed a responsive UI system with dynamic object scaling using Unity grid layout group to fit any quantity of items.',
+                images: ['./assets/VanPrj/ballnim/nim1.png', './assets/VanPrj/ballnim/nim2.png', './assets/VanPrj/ballnim/nim3.png'],
+                links: `
+                    <a href="https://vantrannnn.itch.io/ballnim" target="_blank" class="text-xs font-bold text-black bg-[#38bdf8] px-4 py-2 rounded hover:bg-white transition-colors">PLAY GAME</a>
+                    <a href="https://github.com/VanTrannnn/BallNim" target="_blank" class="text-xs font-bold text-[#38bdf8] border border-[#38bdf8] px-4 py-2 rounded hover:bg-[#38bdf8] hover:text-black transition-colors">GITHUB</a>
+                `
+            },
+            'word-game': {
+                title: 'Word Game',
+                badge: 'Word Puzzle',
+                color: '#38bdf8',
+                isPortrait: true, // THÊM CỜ ĐỂ BÁO ĐÂY LÀ GAME MÀN HÌNH DỌC
+                desc: 'Mobile word-puzzle game inspired by Wordle, focusing on logic and vocabulary. Implemented 3-state word check (Green/Yellow/Gray). Features dynamic levels from a 5,757-word dictionary and in-game currency for hint system.',
+                images: ['./assets/VanPrj/wordgame/word1.png', './assets/VanPrj/wordgame/word2.png', './assets/VanPrj/wordgame/word3.png'],
+                links: `
+                    <a href="https://github.com/VanTrannnn/WordGame" target="_blank" class="text-xs font-bold text-[#38bdf8] border border-[#38bdf8] px-4 py-2 rounded hover:bg-[#38bdf8] hover:text-black transition-colors">GITHUB REPO</a>
+                `
+            },
+            'ui-showcase': {
+                title: 'Game UI Showcase',
+                badge: 'Video / Prototype',
+                color: '#f472b6',
+                desc: 'Video montage and Figma prototypes demonstrating user interface flow, animations, and art assets designed for upcoming games. Focuses on intuitive user journey and striking visual aesthetics.',
+                images: ['./assets/ui-1.png', './assets/ui-2.png', './assets/ui-3.png'],
+                links: `
+                    <a href="https://thinh-le-huu.figma.site/" target="_blank" class="text-xs font-bold text-black bg-[#f472b6] px-4 py-2 rounded hover:bg-white transition-colors"><i class="fa-solid fa-play mr-1"></i> VIEW PROJECT</a>
+                `
+            },
+            'ui-design': {
+                title: '[Project Name]',
+                badge: 'UI Design',
+                color: '#f472b6',
+                desc: 'Detailed description about this specific UI design project. Replace this placeholder text with the actual details of the project.',
+                images: ['./assets/placeholder-1.png', './assets/placeholder-2.png'],
+                links: `
+                    <a href="#" class="text-xs font-bold text-black bg-[#f472b6] px-4 py-2 rounded hover:bg-white transition-colors">VIEW FIGMA</a>
+                `
+            }
+        };
+
+        // === MODAL LOGIC ===
+        const modal = document.getElementById('project-modal');
+        const modalContent = document.getElementById('modal-content');
+        
+        function openModal(projectId) {
+            playSelectSound(); // Thêm âm thanh khi mở Modal
+            
+            const data = projectsData[projectId];
+            if(!data) return;
+
+            // Đổ dữ liệu vào Modal
+            const badge = document.getElementById('modal-badge');
+            badge.textContent = data.badge;
+            badge.style.color = data.color;
+            badge.style.borderColor = `${data.color}80`; 
+            badge.style.backgroundColor = `${data.color}33`; 
+
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-desc').innerHTML = data.desc;
+            document.getElementById('modal-links').innerHTML = data.links;
+
+            // Xử lý bộ sưu tập ảnh dọc hoặc ngang
+            const imgContainer = document.getElementById('modal-img-container');
+            const mainImg = document.getElementById('modal-main-img');
+            const thumbContainer = document.getElementById('modal-thumbnails');
+            const isPortrait = data.isPortrait === true;
+            
+            // Nếu là màn hình dọc (Word Game) thì kéo dài khung và cho ảnh chứa toàn bộ (contain)
+            if (isPortrait) {
+                imgContainer.className = "w-full h-[400px] md:h-[500px] bg-[#050505] rounded-lg border border-gray-700 overflow-hidden relative flex justify-center items-center";
+                mainImg.className = "h-full w-auto max-w-full object-contain transition-opacity duration-300";
+            } else {
+                imgContainer.className = "w-full h-48 md:h-80 bg-black rounded-lg border border-gray-700 overflow-hidden relative flex justify-center items-center";
+                mainImg.className = "w-full h-full object-cover transition-opacity duration-300";
+            }
+
+            mainImg.src = data.images[0] || ''; 
+            thumbContainer.innerHTML = ''; 
+
+            data.images.forEach((imgSrc, index) => {
+                const thumb = document.createElement('img');
+                thumb.src = imgSrc;
+                
+                // Khung thumbnail dọc hoặc ngang tương ứng
+                if (isPortrait) {
+                    thumb.className = `w-12 h-20 md:w-16 md:h-28 object-cover rounded cursor-pointer border-2 transition-colors hover:border-white ${index === 0 ? 'border-['+data.color+']' : 'border-gray-700'}`;
+                } else {
+                    thumb.className = `w-20 h-14 md:w-24 md:h-16 object-cover rounded cursor-pointer border-2 transition-colors hover:border-white ${index === 0 ? 'border-['+data.color+']' : 'border-gray-700'}`;
+                }
+                
+                // Set viền bằng style inline tránh lỗi Tailwind sinh động
+                if (index === 0) thumb.style.borderColor = data.color;
+
+                // Gắn thêm sự kiện hover cho ảnh nhỏ để kêu bíp
+                thumb.addEventListener('mouseenter', playHoverSound);
+
+                thumb.onclick = () => {
+                    playSelectSound(); // Âm thanh khi chuyển ảnh
+                    mainImg.style.opacity = 0;
+                    setTimeout(() => {
+                        mainImg.src = imgSrc;
+                        mainImg.style.opacity = 1;
+                    }, 150);
+
+                    Array.from(thumbContainer.children).forEach(child => {
+                        child.style.borderColor = '#374151'; 
+                    });
+                    thumb.style.borderColor = data.color;
+                };
+                thumbContainer.appendChild(thumb);
+            });
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal(event) {
+            // Đảm bảo event có tồn tại (người dùng bấm nút X hoặc bấm ra ngoài)
+            if(!event || event.target === modal || !event.target.closest('#modal-content')) {
+                playBackSound(); // Thêm âm thanh khi đóng Modal
+
+                modal.classList.add('opacity-0');
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+                
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+    </script>
+</body>
+</html>
