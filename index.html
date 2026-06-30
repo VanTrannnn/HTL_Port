@@ -10,6 +10,62 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Link to custom CSS -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- ENHANCED HOVER EFFECTS -->
+    <style>
+        /* Hiệu ứng nảy (bounce) và phóng to thẻ */
+        .player-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+        .player-card:hover {
+            transform: scale(1.05) translateY(-15px) !important;
+            z-index: 50;
+        }
+        
+        /* Glow cực mạnh cho Player 1 */
+        .player-card.p1:hover {
+            border-color: #38bdf8 !important;
+            box-shadow: 0 0 50px rgba(56, 189, 248, 0.6), inset 0 0 30px rgba(56, 189, 248, 0.4) !important;
+            background: radial-gradient(circle at center, rgba(56,189,248,0.15) 0%, rgba(0,0,0,0.8) 100%) !important;
+        }
+        
+        /* Glow cực mạnh cho Player 2 */
+        .player-card.p2:hover {
+            border-color: #f472b6 !important;
+            box-shadow: 0 0 50px rgba(244, 114, 182, 0.6), inset 0 0 30px rgba(244, 114, 182, 0.4) !important;
+            background: radial-gradient(circle at center, rgba(244,114,182,0.15) 0%, rgba(0,0,0,0.8) 100%) !important;
+        }
+
+        /* Phóng to và phát sáng Avatar */
+        .player-card:hover .player-avatar {
+            transform: scale(1.15);
+        }
+        .player-card.p1:hover .player-avatar {
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.8);
+        }
+        .player-card.p2:hover .player-avatar {
+            box-shadow: 0 0 25px rgba(244, 114, 182, 0.8);
+        }
+
+        /* Nút Press Start chớp tắt rực rỡ */
+        .press-start-btn {
+            transition: all 0.3s ease;
+        }
+        .player-card.p1:hover .press-start-btn {
+            background-color: #38bdf8;
+            color: #000;
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.8);
+            animation: blinker 0.4s linear infinite; /* Chớp nhanh */
+        }
+        .player-card.p2:hover .press-start-btn {
+            background-color: #f472b6;
+            color: #000;
+            border-color: #f472b6;
+            box-shadow: 0 0 15px rgba(244, 114, 182, 0.8);
+            animation: blinker 0.4s linear infinite; /* Chớp nhanh */
+        }
+    </style>
 </head>
 <body>
 
@@ -37,8 +93,8 @@
                     <div class="player-card p1" onclick="switchView('view-p1')" onmouseenter="this.querySelector('img').src='./assets/dc1.png'" onmouseleave="this.querySelector('img').src='./assets/dc.png'">
                         <img src="./assets/dc.png" alt="Trần Tấn Vạn" class="player-avatar">
                         <h2 class="text-2xl md:text-3xl font-bold text-white mb-2 uppercase">Trần Tấn Vạn</h2>
-                        <p class="text-[#38bdf8] font-semibold tracking-widest uppercase text-xs md:text-sm mb-6">Game Developer</p>
-                        <div class="bg-black/50 px-4 py-2 rounded border border-gray-800 text-xs text-gray-400 uppercase tracking-widest">
+                        <p class="text-[#38bdf8] font-semibold tracking-widest uppercase text-xs md:text-sm mb-6">Game Developer & Tester</p>
+                        <div class="press-start-btn bg-black/50 px-4 py-2 rounded border border-gray-800 text-xs text-gray-400 uppercase tracking-widest">
                             Press Start
                         </div>
                     </div>
@@ -49,8 +105,8 @@
                     <div class="player-card p2" onclick="switchView('view-p2')" onmouseenter="this.querySelector('img').src='./assets/htl1.png'" onmouseleave="this.querySelector('img').src='./assets/htl.png'">
                         <img src="./assets/htl.png" alt="Lê Hữu Thịnh" class="player-avatar">
                         <h2 class="text-2xl md:text-3xl font-bold text-white mb-2 uppercase">Lê Hữu Thịnh</h2>
-                        <p class="text-[#f472b6] font-semibold tracking-widest uppercase text-xs md:text-sm mb-6">UI/UX Designer</p>
-                        <div class="bg-black/50 px-4 py-2 rounded border border-gray-800 text-xs text-gray-400 uppercase tracking-widest">
+                        <p class="text-[#f472b6] font-semibold tracking-widest uppercase text-xs md:text-sm mb-6">Game Planner & UI/UX</p>
+                        <div class="press-start-btn bg-black/50 px-4 py-2 rounded border border-gray-800 text-xs text-gray-400 uppercase tracking-widest">
                             Press Start
                         </div>
                     </div>
@@ -76,27 +132,75 @@
                             <h2 class="text-2xl md:text-3xl font-bold text-white uppercase">Trần Tấn Vạn</h2>
                             <p class="text-[#38bdf8] font-bold text-xs md:text-sm tracking-widest mb-4">GAME DEV & TESTER</p>
                             <p class="text-gray-400 text-xs md:text-sm leading-relaxed text-left mb-4 italic">
-                                "Information Technology graduate with experience building 2D mobile puzzle, casual/hypercasual games in Unity using C#. Focused on gameplay programming, logic optimization, and QA testing."
+                                "Information Technology graduate with experience building 2D mobile puzzle, casual/hypercasual games in Unity using C#. Interested in gameplay programming and seeking a Unity game developer position."
                             </p>
                             <div class="flex justify-center gap-4 border-t border-gray-800 pt-4">
                                 <a href="https://github.com/VanTrannnn" target="_blank" class="text-gray-400 hover:text-[#38bdf8] text-xl"><i class="fa-brands fa-github"></i></a>
                                 <a href="https://vantrannnn.itch.io/" target="_blank" class="text-gray-400 hover:text-[#38bdf8] text-xl"><i class="fa-brands fa-itch-io"></i></a>
+                            </div>
+                            <!-- CV Button Player 1 -->
+                            <div class="mt-4 flex justify-center">
+                                <a href="https://drive.google.com/file/d/1rK5ta1LGerWuqjCukBLmiV_r0GWlZKQg/view" target="_blank" class="px-4 py-2 text-[10px] md:text-xs font-bold text-[#38bdf8] border border-[#38bdf8] rounded hover:bg-[#38bdf8] hover:text-black transition-colors uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fa-solid fa-file-pdf"></i> VIEW CV
+                                </a>
                             </div>
                         </div>
 
                         <div class="stat-box">
                             <h3 class="text-gray-500 font-bold tracking-widest text-[10px] md:text-xs mb-3 uppercase">Inventory / Skills</h3>
                             <ul class="space-y-2 text-xs md:text-sm text-gray-300">
-                                <li><span class="text-[#38bdf8]">></span> <strong>Engine:</strong> Unity (2D, UI, Mechanics)</li>
+                                <li><span class="text-[#38bdf8]">></span> <strong>Engine:</strong> Unity Engine (2D, UI)</li>
                                 <li><span class="text-[#38bdf8]">></span> <strong>Language:</strong> C#, C++, Python</li>
-                                <li><span class="text-[#38bdf8]">></span> <strong>QA:</strong> Bug fixing, Logic testing</li>
-                                <li><span class="text-[#38bdf8]">></span> <strong>Honors:</strong> ICPC '23, MOS Cert '23</li>
+                                <li><span class="text-[#38bdf8]">></span> <strong>Database:</strong> SQL, PHP</li>
+                                <li><span class="text-[#38bdf8]">></span> <strong>Tools:</strong> Git, Visual Studio/VS Code</li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Right: Project Levels (IMAGE CARDS) -->
+                    <!-- Right: Timeline & Projects (Player 1) -->
                     <div class="lg:col-span-8 flex flex-col">
+                        
+                        <!-- Timeline: Experience & Education (P1) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                            <!-- Experience -->
+                            <div>
+                                <h3 class="text-xl md:text-2xl font-bold text-white uppercase mb-4 border-b border-gray-800 pb-2">Quest Log <span class="text-xs text-gray-500 block md:inline">(Experience)</span></h3>
+                                
+                                <div class="border-l-2 border-[#38bdf8] pl-4 mb-4 relative">
+                                    <div class="absolute w-3 h-3 bg-[#0a0f1a] border-2 border-[#38bdf8] rounded-full -left-[7.5px] top-1.5"></div>
+                                    <h4 class="text-white font-bold uppercase text-sm md:text-base">Data Processing Operator</h4>
+                                    <p class="text-[#38bdf8] text-[10px] md:text-xs font-bold mb-1 tracking-widest">DIGI-TEXX VIETNAM | APR 2026 - PRESENT</p>
+                                    <p class="text-gray-400 text-xs md:text-sm">Working as a Data Processing Operator.</p>
+                                </div>
+
+                                <div class="border-l-2 border-gray-700 pl-4 mb-4 relative opacity-70 hover:opacity-100 transition-opacity">
+                                    <div class="absolute w-3 h-3 bg-[#0a0f1a] border-2 border-gray-700 rounded-full -left-[7.5px] top-1.5"></div>
+                                    <h4 class="text-gray-300 font-bold uppercase text-sm md:text-base">Intern Web Developer</h4>
+                                    <p class="text-gray-500 text-[10px] md:text-xs font-bold mb-1 tracking-widest">VENTECH ASIA | JUL 2024 - SEP 2024</p>
+                                    <p class="text-gray-500 text-xs md:text-sm">Full-stack developer with Laravel Framework (BE) and Bootstrap (FE). Used Git for version control and coordinated workflows in a multi-developer environment.</p>
+                                </div>
+                            </div>
+
+                            <!-- Education -->
+                            <div>
+                                <h3 class="text-xl md:text-2xl font-bold text-white uppercase mb-4 border-b border-gray-800 pb-2">Training <span class="text-xs text-gray-500 block md:inline">(Education)</span></h3>
+                                
+                                <div class="border-l-2 border-[#38bdf8] pl-4 mb-4 relative">
+                                    <div class="absolute w-3 h-3 bg-[#0a0f1a] border-2 border-[#38bdf8] rounded-full -left-[7.5px] top-1.5"></div>
+                                    <h4 class="text-white font-bold uppercase text-sm md:text-base">Information Technology</h4>
+                                    <p class="text-[#38bdf8] text-[10px] md:text-xs font-bold mb-1 tracking-widest">VINH LONG UNIVERSITY OF TECHNOLOGY | 2021 - 2025</p>
+                                    <p class="text-gray-400 text-xs md:text-sm">Bachelor of Engineering in Information Technology. GPA: 3.61/4.</p>
+                                </div>
+                                <div class="border-l-2 border-gray-700 pl-4 relative opacity-70 hover:opacity-100 transition-opacity">
+                                    <div class="absolute w-3 h-3 bg-[#0a0f1a] border-2 border-gray-700 rounded-full -left-[7.5px] top-1.5"></div>
+                                    <h4 class="text-gray-300 font-bold uppercase text-sm md:text-base">Competitions & Certifications</h4>
+                                    <p class="text-gray-500 text-[10px] md:text-xs font-bold mb-1 tracking-widest">2023</p>
+                                    <p class="text-gray-500 text-xs md:text-sm">Participated in ICPC Competition (C++). MOS Certification obtained at MOS World Championship.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Completed Levels (Projects) -->
                         <h3 class="text-xl md:text-2xl font-bold text-white uppercase mb-4 md:mb-6 border-b border-gray-800 pb-2">Completed Levels</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             
@@ -154,29 +258,80 @@
                         <div class="stat-box text-center border-t-4 border-t-[#f472b6]">
                             <img src="./assets/htl.png" class="player-avatar-small mx-auto rounded-full border-4 border-[#f472b6] mb-4 bg-black">
                             <h2 class="text-2xl md:text-3xl font-bold text-white uppercase">Lê Hữu Thịnh</h2>
-                            <p class="text-[#f472b6] font-bold text-xs md:text-sm tracking-widest mb-4">UI/UX DESIGNER</p>
+                            <p class="text-[#f472b6] font-bold text-xs md:text-sm tracking-widest mb-4">GAME PLANNER & UI/UX</p>
                             <p class="text-gray-400 text-xs md:text-sm leading-relaxed text-left mb-4 italic">
-                                "Passionate UI/UX Designer dedicated to crafting engaging and intuitive digital experiences. Specializing in game interfaces, wireframing, and visual aesthetics."
+                                "Analytical, detail-oriented and proactive. Experienced in content writing, image & video design, data analysis, and UI/UX design."
                             </p>
                             <div class="flex justify-center gap-4 border-t border-gray-800 pt-4">
                                 <a href="https://thinh-le-huu.figma.site/" target="_blank" class="text-gray-400 hover:text-[#f472b6] text-xl"><i class="fa-brands fa-figma"></i></a>
-                                <a href="#" class="text-gray-400 hover:text-[#f472b6] text-xl"><i class="fa-brands fa-behance"></i></a>
+                                <a href="https://www.linkedin.com/in/huuthinhle-edgar/" class="text-gray-400 hover:text-[#f472b6] text-xl"><i class="fa-brands fa-linkedin"></i></a>
+                            </div>
+                            <!-- CV Button Player 2 -->
+                            <div class="mt-4 flex flex-col items-center gap-2">
+                                <a href="https://drive.google.com/file/d/1-xUJ4NxANEZGP8Iha6Xjl25ARDttv--c/view" target="_blank" class="px-4 py-2 text-[10px] md:text-xs font-bold text-[#f472b6] border border-[#f472b6] rounded hover:bg-[#f472b6] hover:text-black transition-colors uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fa-solid fa-file-pdf"></i> VIEW CV
+                                </a>
+                                <a href="https://thinh-le-huu.figma.site/" target="_blank" class="px-4 py-2 text-[10px] md:text-xs font-bold text-black bg-[#f472b6] rounded hover:bg-white transition-colors uppercase tracking-widest flex items-center gap-2">
+                                    <i class="fa-solid fa-user"></i> VIEW PORTFOLIO
+                                </a>
                             </div>
                         </div>
 
                         <div class="stat-box">
                             <h3 class="text-gray-500 font-bold tracking-widest text-[10px] md:text-xs mb-3 uppercase">Inventory / Skills</h3>
                             <ul class="space-y-2 text-xs md:text-sm text-gray-300">
-                                <li><span class="text-[#f472b6]">></span> <strong>Tools:</strong> Figma, Adobe Suite</li>
-                                <li><span class="text-[#f472b6]">></span> <strong>Role:</strong> Game UI, Prototyping</li>
-                                <li><span class="text-[#f472b6]">></span> <strong>UX:</strong> Player Journey, Wireframing</li>
-                                <li><span class="text-[#f472b6]">></span> <strong>Art:</strong> Visual Hierarchy, 2D Assets</li>
+                                <li><span class="text-[#f472b6]">></span> <strong>Technical:</strong> Microsoft Office, Google Workspace, Adobe Photoshop</li>
+                                <li><span class="text-[#f472b6]">></span> <strong>Presentation:</strong> Planning/report decks, data visualization</li>
+                                <li><span class="text-[#f472b6]">></span> <strong>Soft Skills:</strong> Detail-oriented, analytical thinking, stakeholder coordination</li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Right: Project Levels (IMAGE CARDS) -->
+                    <!-- Right: Timeline & Projects (Player 2) -->
                     <div class="lg:col-span-8 flex flex-col">
+                        
+                        <!-- Timeline: Experience & Education (P2) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                            <!-- Experience -->
+                            <div>
+                                <h3 class="text-xl md:text-2xl font-bold text-white uppercase mb-4 border-b border-gray-800 pb-2">Quest Log <span class="text-xs text-gray-500 block md:inline">(Experience)</span></h3>
+                                
+                                <div class="border-l-2 border-[#f472b6] pl-4 mb-4 relative">
+                                    <div class="absolute w-3 h-3 bg-[#0a0f1a] border-2 border-[#f472b6] rounded-full -left-[7.5px] top-1.5"></div>
+                                    <h4 class="text-white font-bold uppercase text-sm md:text-base">Marketing Intern</h4>
+                                    <p class="text-[#f472b6] text-[10px] md:text-xs font-bold mb-1 tracking-widest">THU NGA PHARMACY | SEP 2025 - DEC 2025</p>
+                                    <p class="text-gray-400 text-xs md:text-sm">Researched market trends, cleaned data in Excel, and prepared PPT reports. Coordinated daily ops and supported TikTok channel setup & tracking.</p>
+                                </div>
+
+                                <div class="border-l-2 border-gray-700 pl-4 mb-4 relative opacity-70 hover:opacity-100 transition-opacity">
+                                    <div class="absolute w-3 h-3 bg-[#0a0f1a] border-2 border-gray-700 rounded-full -left-[7.5px] top-1.5"></div>
+                                    <h4 class="text-gray-300 font-bold uppercase text-sm md:text-base">Trade Marketing Intern</h4>
+                                    <p class="text-gray-500 text-[10px] md:text-xs font-bold mb-1 tracking-widest">GHN JSC | JAN 2024 - OCT 2024</p>
+                                    <p class="text-gray-500 text-xs md:text-sm">Consolidated weekly performance data across 120+ post offices in Excel. Coordinated Tet campaign and nationwide POSM deployment.</p>
+                                </div>
+                            </div>
+
+                            <!-- Education -->
+                            <div>
+                                <h3 class="text-xl md:text-2xl font-bold text-white uppercase mb-4 border-b border-gray-800 pb-2">Training <span class="text-xs text-gray-500 block md:inline">(Education)</span></h3>
+                                
+                                <div class="border-l-2 border-[#f472b6] pl-4 mb-4 relative">
+                                    <div class="absolute w-3 h-3 bg-[#0a0f1a] border-2 border-[#f472b6] rounded-full -left-[7.5px] top-1.5"></div>
+                                    <h4 class="text-white font-bold uppercase text-sm md:text-base">Accounting & Auditing</h4>
+                                    <p class="text-[#f472b6] text-[10px] md:text-xs font-bold mb-1 tracking-widest">FOREIGN TRADE UNIVERSITY | GRAD. APR 2026</p>
+                                    <p class="text-gray-400 text-xs md:text-sm">GPA: 3.02/4.00. Coursework: Marketing Fundamentals, Principles of Management, Business Analysis.</p>
+                                </div>
+                                <div class="border-l-2 border-gray-700 pl-4 relative opacity-70 hover:opacity-100 transition-opacity">
+                                    <div class="absolute w-3 h-3 bg-[#0a0f1a] border-2 border-gray-700 rounded-full -left-[7.5px] top-1.5"></div>
+                                    <h4 class="text-gray-300 font-bold uppercase text-sm md:text-base">Awards & Honors</h4>
+                                    <p class="text-gray-500 text-[10px] md:text-xs font-bold mb-1 tracking-widest">2024 - 2025</p>
+                                    <p class="text-gray-500 text-xs md:text-sm">1st Runner-up, TVCreate 2025 (Marketing & Advertising Film Competition, HSU); Top 46 (Top 30%), TVCreate 2024
+(HSU); Top 10, The Next E-commerce Manager – Season 3 (Heineken Hackathon Post Event, AIESEC Vietnam).</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Completed Levels (Projects) -->
                         <h3 class="text-xl md:text-2xl font-bold text-white uppercase mb-4 md:mb-6 border-b border-gray-800 pb-2">Completed Levels</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             
@@ -186,7 +341,7 @@
                                 <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
                                 <div class="absolute bottom-0 left-0 p-4 w-full">
                                     <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">Video / Prototype</span>
-                                    <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">Game UI Showcase</h4>
+                                    <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">HUMADA STORIES</h4>
                                     <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#f472b6]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
                                 </div>
                             </div>
@@ -196,8 +351,8 @@
                                 <div class="absolute inset-0 bg-gray-900 opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
                                 <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
                                 <div class="absolute bottom-0 left-0 p-4 w-full">
-                                    <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">UI Design</span>
-                                    <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">[Project Name]</h4>
+                                    <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">Community Story</span>
+                                    <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">HUMADA STORIES</h4>
                                     <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#f472b6]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
                                 </div>
                             </div>
@@ -218,7 +373,7 @@
                 <div class="w-full max-w-6xl pb-8">
                     <div class="text-center mb-10">
                         <h1 class="text-3xl md:text-5xl font-bold text-white blink-text tracking-widest mb-2">ALL PROJECTS</h1>
-                        <p class="text-slate-400 text-sm md:text-base tracking-wider">LEVELS CREATED BY G-SPARK STUDIO</p>
+                        <p class="text-slate-400 text-sm md:text-base tracking-wider">OUR TEAM'S LEVELS</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -452,13 +607,12 @@
                 `
             },
             'ui-design': {
-                title: '[Project Name]',
-                badge: 'UI Design',
+                title: 'Humada’s Stories',
+                badge: 'Story Page',
                 color: '#f472b6',
-                desc: 'Detailed description about this specific UI design project. Replace this placeholder text with the actual details of the project.',
-                images: ['./assets/placeholder-1.png', './assets/placeholder-2.png'],
+                desc: 'Co-founded a storytelling community page for Huynh Man Dat High School for the Gifted, growing it to 4.9K followers. Managed page direction, content pillars, and fan engagement while writing narrative-driven posts and designing visual content. Applied planner-style thinking to structure campaigns like a game journey, keeping storytelling consistent and audience interactions strong.',
+                images: ['./assets/ui-bg.png', './assets/ui-bg.png'],
                 links: `
-                    <a href="#" class="text-xs font-bold text-black bg-[#f472b6] px-4 py-2 rounded hover:bg-white transition-colors">VIEW FIGMA</a>
                 `
             }
         };
