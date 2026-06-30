@@ -15,21 +15,35 @@
     <style>
         /* Hiệu ứng nảy (bounce) và phóng to thẻ */
         .player-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
         }
+
         .player-card:hover {
-            transform: scale(1.05) translateY(-15px) !important;
-            z-index: 50;
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+            z-index: 10;
         }
-        
-        /* Glow cực mạnh cho Player 1 */
+
+        /* Hiệu ứng chọn (Selected) */
+        .player-card:active {
+            transform: scale(0.95);
+        }
+
+        .player-card:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+            z-index: 10;
+        }
+
         .player-card.p1:hover {
             border-color: #38bdf8 !important;
             box-shadow: 0 0 50px rgba(56, 189, 248, 0.6), inset 0 0 30px rgba(56, 189, 248, 0.4) !important;
             background: radial-gradient(circle at center, rgba(56,189,248,0.15) 0%, rgba(0,0,0,0.8) 100%) !important;
         }
-        
-        /* Glow cực mạnh cho Player 2 */
+
         .player-card.p2:hover {
             border-color: #f472b6 !important;
             box-shadow: 0 0 50px rgba(244, 114, 182, 0.6), inset 0 0 30px rgba(244, 114, 182, 0.4) !important;
@@ -65,7 +79,352 @@
             box-shadow: 0 0 15px rgba(244, 114, 182, 0.8);
             animation: blinker 0.4s linear infinite; /* Chớp nhanh */
         }
+
+        /* Sci-fi scanline effect cho project cards */
+        .project-card {
+            position: relative;
+            isolation: isolate;
+            transform: translateZ(0);
+            overflow: hidden;
+            user-select: none;
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 18px 45px rgba(0,0,0,0.45);
+            filter: brightness(1.03);
+        }
+
+        .project-card:active {
+            transform: scale(0.97);
+            transition-duration: 0.15s;
+        }
+
+        .project-card.is-selected {
+            transform: translateY(-3px) scale(1.01);
+            border-color: rgba(255,255,255,0.7) !important;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.2), 0 0 35px rgba(255,255,255,0.12), 0 20px 50px rgba(0,0,0,0.5) !important;
+        }
+
+        .project-card.is-selected .project-card-image {
+            transform: scale(1.06);
+            filter: saturate(1.16) brightness(1.06);
+        }
+
+        .project-card.is-selected .project-card-overlay {
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.58) 100%);
+        }
+
+        .project-card::before,
+        .project-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .project-card::before {
+            inset: -30% 0 auto 0;
+            height: 160%;
+            background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.16) 45%, transparent 100%);
+            transform: translateY(-120%);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease;
+        }
+
+        .project-card::after {
+            inset: 10px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: inherit;
+            transform: scale(0.97);
+            transition: transform 0.35s ease, opacity 0.25s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .project-card:hover::before,
+        .project-card.is-selected::before {
+            opacity: 1;
+            transform: translateY(120%);
+        }
+
+        .project-card:hover::after,
+        .project-card.is-selected::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .project-card.p1:hover::after,
+        .project-card.p1.is-selected::after {
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: inset 0 0 18px rgba(56, 189, 248, 0.16);
+        }
+
+        .project-card.p2:hover::after,
+        .project-card.p2.is-selected::after {
+            border-color: rgba(244, 114, 182, 0.4);
+            box-shadow: inset 0 0 18px rgba(244, 114, 182, 0.16);
+        }
+
+        .project-card.p1:hover,
+        .project-card.p1.is-selected {
+            border-color: #38bdf8 !important;
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.25), 0 0 40px rgba(56, 189, 248, 0.3), 0 18px 45px rgba(0,0,0,0.45) !important;
+        }
+
+        .project-card.p1:hover .project-card-image,
+        .project-card.p1.is-selected .project-card-image {
+            transform: scale(1.08);
+            filter: saturate(1.2) brightness(1.05);
+        }
+
+        .project-card.p2:hover,
+        .project-card.p2.is-selected {
+            border-color: #f472b6 !important;
+            box-shadow: 0 0 0 1px rgba(244, 114, 182, 0.25), 0 0 40px rgba(244, 114, 182, 0.3), 0 18px 45px rgba(0,0,0,0.45) !important;
+        }
+
+        .project-card.p2:hover .project-card-image,
+        .project-card.p2.is-selected .project-card-image {
+            transform: scale(1.08);
+            filter: saturate(1.15) brightness(1.05);
+        }
+
+        .project-card:hover .project-card-overlay {
+            background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
+        }
+
+        .project-card:hover h4,
+        .project-card.is-selected h4 {
+            transform: translateY(-1px);
+            text-shadow: 0 0 16px rgba(255,255,255,0.2);
+        }
+
+        .project-card h4 {
+            transition: transform 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .project-card-image {
+            transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.45s ease;
+            transform: scale(1);
+        }
+
+        .project-card-overlay {
+            transition: background 0.35s ease;
+        }
+
+        .project-card-ripple {
+            position: absolute;
+            border-radius: 9999px;
+            border: 1px solid rgba(255,255,255,0.75);
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none;
+            z-index: 3;
+            animation: projectRipple 0.6s ease-out forwards;
+        }
+
+        .project-card.p1 .project-card-ripple {
+            border-color: rgba(56, 189, 248, 0.75);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+        }
+
+        .project-card.p2 .project-card-ripple {
+            border-color: rgba(244, 114, 182, 0.75);
+            box-shadow: 0 0 12px rgba(244, 114, 182, 0.2);
+        }
+
+        .neon-title {
+            color: #f8fbff;
+            text-shadow: 0 0 6px rgba(255,255,255,0.35), 0 0 16px rgba(56, 189, 248, 0.15);
+            animation: neonPulse 1.8s ease-in-out infinite alternate;
+        }
+
+        .hero-heading {
+            position: relative;
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+        }
+
+        .hero-heading::before,
+        .hero-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.8), transparent);
+            opacity: 0.7;
+            transform: scaleX(0.7);
+        }
+
+        .hero-heading::before {
+            top: -0.25rem;
+            animation: scanLine 2.4s linear infinite;
+        }
+
+        .hero-heading::after {
+            bottom: -0.25rem;
+            animation: scanLine 2.4s linear infinite reverse;
+        }
+
+        .hero-subtitle {
+            color: #a9bacd;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            text-shadow: 0 0 8px rgba(255,255,255,0.18), 0 0 18px rgba(56, 189, 248, 0.16);
+            animation: subtitleGlow 2.2s ease-in-out infinite alternate;
+        }
+
+        .hero-title {
+            letter-spacing: 0.2em;
+            transform: translateZ(0);
+            text-shadow: 0 0 8px rgba(255,255,255,0.28), 0 0 20px rgba(56, 189, 248, 0.2);
+        }
+
+        .nav-tab {
+            position: relative;
+            transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .nav-tab:hover,
+        .nav-tab.active {
+            color: #ffffff;
+            transform: translateY(-1px);
+            text-shadow: 0 0 10px rgba(255,255,255,0.4), 0 0 22px rgba(56, 189, 248, 0.25);
+        }
+
+        .nav-tab::before {
+            content: '▶';
+            position: absolute;
+            left: -1rem;
+            top: 50%;
+            transform: translateY(-50%) translateX(-8px);
+            opacity: 0;
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .nav-tab:hover::before,
+        .nav-tab.active::before {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .nav-tab.p2:hover::before,
+        .nav-tab.p2.active::before {
+            color: #f472b6;
+            text-shadow: 0 0 10px rgba(244, 114, 182, 0.7);
+        }
+
+        @keyframes projectRipple {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0.75;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.8);
+                opacity: 0;
+            }
+        }
+
+        @keyframes neonPulse {
+            from {
+                text-shadow: 0 0 6px rgba(255,255,255,0.35), 0 0 16px rgba(56, 189, 248, 0.15);
+                filter: brightness(0.95);
+            }
+            to {
+                text-shadow: 0 0 10px rgba(255,255,255,0.6), 0 0 24px rgba(56, 189, 248, 0.3), 0 0 36px rgba(56, 189, 248, 0.16);
+                filter: brightness(1.06);
+            }
+        }
+
+        @keyframes subtitleGlow {
+            from {
+                text-shadow: 0 0 6px rgba(255,255,255,0.15), 0 0 14px rgba(56, 189, 248, 0.12);
+                filter: brightness(0.95);
+            }
+            to {
+                text-shadow: 0 0 10px rgba(255,255,255,0.24), 0 0 24px rgba(56, 189, 248, 0.22);
+                filter: brightness(1.05);
+            }
+        }
+
+        @keyframes scanLine {
+            0% {
+                transform: scaleX(0.5);
+                opacity: 0.2;
+            }
+            50% {
+                transform: scaleX(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scaleX(0.5);
+                opacity: 0.2;
+            }
+        }
     </style>
+    
+<div id="audio-control" class="fixed bottom-4 right-4 z-50">
+    <button onclick="toggleMusic()" class="bg-slate-800 p-3 rounded-full border border-slate-600 hover:bg-slate-700">
+        <i id="music-icon" class="fas fa-volume-up text-white"></i>
+    </button>
+</div>
+
+<audio id="bgm" loop preload="auto">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const bgm = document.getElementById('bgm');
+    const icon = document.getElementById('music-icon');
+    let isPlaying = false;
+    let musicStarted = false;
+
+    function updateMusicIcon() {
+        icon.className = isPlaying
+            ? "fas fa-volume-up text-white"
+            : "fas fa-volume-mute text-white";
+    }
+
+    function startBackgroundMusic() {
+        if (musicStarted) return;
+
+        musicStarted = true;
+        bgm.volume = 0.05;
+        bgm.play().then(() => {
+            isPlaying = true;
+            updateMusicIcon();
+        }).catch(() => {
+            isPlaying = false;
+            updateMusicIcon();
+        });
+    }
+
+    function toggleMusic() {
+        if (!musicStarted) {
+            startBackgroundMusic();
+            return;
+        }
+
+        if (isPlaying) {
+            bgm.pause();
+            isPlaying = false;
+        } else {
+            bgm.play().catch(() => {});
+            isPlaying = true;
+        }
+        updateMusicIcon();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateMusicIcon();
+        document.addEventListener('click', startBackgroundMusic, { once: true });
+        document.addEventListener('touchstart', startBackgroundMusic, { once: true });
+    });
+</script>
 </head>
 <body>
 
@@ -82,9 +441,9 @@
                     <button class="nav-tab" onclick="switchView('view-all-projects')">PROJECTS</button>
                 </div>
 
-                <div class="text-center mb-8 shrink-0">
-                    <h2 class="title-presentation text-sm md:text-xl text-slate-400 tracking-[0.3em] mb-2">PROMPT-TO-PLAY PORTFOLIO</h2>
-                    <h1 class="title-main text-3xl md:text-5xl font-bold text-white blink-text tracking-widest">SELECT PLAYER</h1>
+                <div class="text-center mb-8 shrink-0 hero-heading">
+                    <h2 class="title-presentation hero-subtitle text-sm md:text-xl mb-2">PROMPT-TO-PLAY PORTFOLIO</h2>
+                    <h1 class="title-main neon-title hero-title text-3xl md:text-5xl font-bold tracking-widest">SELECT PLAYER</h1>
                 </div>
 
                 <div class="player-select-container">
@@ -116,7 +475,7 @@
 
             <!-- SCENE 2: PLAYER 1 (VAN) DETAILS -->
             <div id="view-p1" class="game-view">
-                <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#0a0f1a]/95 py-3 z-50 backdrop-blur-sm border-b border-gray-800">
+                <div class="flex justify-between items-center mb-6 py-3 border-b border-gray-800">
                     <button class="btn-back text-xs md:text-sm" onclick="switchView('view-select', true)">
                         <i class="fa-solid fa-caret-left mr-2"></i> SELECT SCREEN
                     </button>
@@ -205,9 +564,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             
                             <!-- P1 Project 1 Card -->
-                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('parking-car')">
-                                <img src="./assets/VanPrj/parking/parkingcar.png" alt="Parking Car" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-                                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
+                            <div class="project-card relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all p1" onclick="openModal('parking-car')">
+                                <img src="./assets/VanPrj/parking/parkingcar.png" alt="Parking Car" class="project-card-image absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="project-card-overlay absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
                                 <div class="absolute bottom-0 left-0 p-4 w-full">
                                     <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Pathfinding Puzzle</span>
                                     <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Parking Car</h4>
@@ -216,9 +575,9 @@
                             </div>
 
                             <!-- P1 Project 2 Card -->
-                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('ball-nim')">
-                                <img src="./assets/VanPrj/ballnim/nim.png" alt="Ball Nim" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-                                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
+                            <div class="project-card relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all p1" onclick="openModal('ball-nim')">
+                                <img src="./assets/VanPrj/ballnim/nim.png" alt="Ball Nim" class="project-card-image absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="project-card-overlay absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
                                 <div class="absolute bottom-0 left-0 p-4 w-full">
                                     <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Logic Strategy</span>
                                     <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Ball Nim</h4>
@@ -227,9 +586,9 @@
                             </div>
 
                             <!-- P1 Project 3 Card -->
-                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('word-game')">
-                                <img src="./assets/VanPrj/wordgame/word.png" alt="Word Game" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-                                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
+                            <div class="project-card relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all p1" onclick="openModal('word-game')">
+                                <img src="./assets/VanPrj/wordgame/word.png" alt="Word Game" class="project-card-image absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="project-card-overlay absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
                                 <div class="absolute bottom-0 left-0 p-4 w-full">
                                     <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Word Puzzle</span>
                                     <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Word Game</h4>
@@ -244,7 +603,7 @@
 
             <!-- SCENE 3: PLAYER 2 (THINH) DETAILS -->
             <div id="view-p2" class="game-view">
-                <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#0a0f1a]/95 py-3 z-50 backdrop-blur-sm border-b border-gray-800">
+                <div class="flex justify-between items-center mb-6 py-3 border-b border-gray-800">
                     <button class="btn-back text-xs md:text-sm" onclick="switchView('view-select', true)">
                         <i class="fa-solid fa-caret-left mr-2"></i> SELECT SCREEN
                     </button>
@@ -336,9 +695,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             
                             <!-- P2 Project 1 Card -->
-                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all" onclick="openModal('ui-showcase')">
-                                <img src="./assets/ui-bg.png" alt="UI Showcase" class="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-                                <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
+                            <div class="project-card relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all p2" onclick="openModal('ui-showcase')">
+                                <img src="./assets/ui-bg.png" alt="UI Showcase" class="project-card-image absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="project-card-overlay absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent opacity-80"></div>
                                 <div class="absolute bottom-0 left-0 p-4 w-full">
                                     <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">Video / Prototype</span>
                                     <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">HUMADA STORIES</h4>
@@ -347,8 +706,8 @@
                             </div>
 
                             <!-- P2 Project 2 Card Placeholder -->
-                            <div class="relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all" onclick="openModal('ui-design')">
-                                <div class="absolute inset-0 bg-gray-900 opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                            <div class="project-card relative h-48 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all p2" onclick="openModal('ui-design')">
+                                <div class="project-card-overlay absolute inset-0 bg-gray-900 opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
                                 <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
                                 <div class="absolute bottom-0 left-0 p-4 w-full">
                                     <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">Community Story</span>
@@ -372,16 +731,16 @@
 
                 <div class="w-full max-w-6xl pb-8">
                     <div class="text-center mb-10">
-                        <h1 class="text-3xl md:text-5xl font-bold text-white blink-text tracking-widest mb-2">ALL PROJECTS</h1>
+                        <h1 class="neon-title text-3xl md:text-5xl font-bold tracking-widest mb-2">ALL PROJECTS</h1>
                         <p class="text-slate-400 text-sm md:text-base tracking-wider">OUR TEAM'S LEVELS</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <!-- P1 Projects -->
-                        <div class="relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('parking-car')">
+                        <div class="project-card relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all p1" onclick="openModal('parking-car')">
                             <div class="absolute top-3 left-3 bg-[#38bdf8] text-black text-[10px] md:text-xs font-bold px-2 py-1 rounded z-10 shadow-lg">PLAYER 1 - VẠN</div>
-                            <img src="./assets/VanPrj/parking/parkingcar.png" alt="Parking Car" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <img src="./assets/VanPrj/parking/parkingcar.png" alt="Parking Car" class="project-card-image absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="project-card-overlay absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-transparent opacity-80"></div>
                             <div class="absolute bottom-0 left-0 p-4 w-full">
                                 <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Pathfinding Puzzle</span>
                                 <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Parking Car</h4>
@@ -389,10 +748,10 @@
                             </div>
                         </div>
 
-                        <div class="relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('ball-nim')">
+                        <div class="project-card relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all p1" onclick="openModal('ball-nim')">
                             <div class="absolute top-3 left-3 bg-[#38bdf8] text-black text-[10px] md:text-xs font-bold px-2 py-1 rounded z-10 shadow-lg">PLAYER 1 - VẠN</div>
-                            <img src="./assets/VanPrj/ballnim/nim.png" alt="Ball Nim" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <img src="./assets/VanPrj/ballnim/nim.png" alt="Ball Nim" class="project-card-image absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="project-card-overlay absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-transparent opacity-80"></div>
                             <div class="absolute bottom-0 left-0 p-4 w-full">
                                 <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Logic Strategy</span>
                                 <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Ball Nim</h4>
@@ -400,10 +759,10 @@
                             </div>
                         </div>
 
-                        <div class="relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all" onclick="openModal('word-game')">
+                        <div class="project-card relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#38bdf8] transition-all p1" onclick="openModal('word-game')">
                             <div class="absolute top-3 left-3 bg-[#38bdf8] text-black text-[10px] md:text-xs font-bold px-2 py-1 rounded z-10 shadow-lg">PLAYER 1 - VẠN</div>
-                            <img src="./assets/VanPrj/wordgame/word.png" alt="Word Game" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <img src="./assets/VanPrj/wordgame/word.png" alt="Word Game" class="project-card-image absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="project-card-overlay absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-transparent opacity-80"></div>
                             <div class="absolute bottom-0 left-0 p-4 w-full">
                                 <span class="text-[10px] md:text-xs bg-[#38bdf8]/20 text-[#38bdf8] px-2 py-1 rounded border border-[#38bdf8]/50">Word Puzzle</span>
                                 <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#38bdf8] transition-colors">Word Game</h4>
@@ -412,13 +771,24 @@
                         </div>
 
                         <!-- P2 Projects -->
-                        <div class="relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all" onclick="openModal('ui-showcase')">
+                        <div class="project-card relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all p2" onclick="openModal('ui-showcase')">
                             <div class="absolute top-3 left-3 bg-[#f472b6] text-black text-[10px] md:text-xs font-bold px-2 py-1 rounded z-10 shadow-lg">PLAYER 2 - THỊNH</div>
-                            <img src="./assets/ui-bg.png" alt="Game UI Showcase" class="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <img src="./assets/ui-bg.png" alt="Game UI Showcase" class="project-card-image absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="project-card-overlay absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-transparent opacity-80"></div>
                             <div class="absolute bottom-0 left-0 p-4 w-full">
                                 <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">Video / Prototype</span>
                                 <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">Game UI Showcase</h4>
+                                <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#f472b6]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
+                            </div>
+                        </div>
+
+                        <div class="project-card relative h-56 border-2 border-gray-800 rounded-xl overflow-hidden cursor-pointer group hover:border-[#f472b6] transition-all p2" onclick="openModal('ui-design')">
+                            <div class="absolute top-3 left-3 bg-[#f472b6] text-black text-[10px] md:text-xs font-bold px-2 py-1 rounded z-10 shadow-lg">PLAYER 2 - THỊNH</div>
+                            <img src="./assets/ui-bg.png" alt="Humada Stories" class="project-card-image absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                            <div class="project-card-overlay absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-transparent opacity-80"></div>
+                            <div class="absolute bottom-0 left-0 p-4 w-full">
+                                <span class="text-[10px] md:text-xs bg-[#f472b6]/20 text-[#f472b6] px-2 py-1 rounded border border-[#f472b6]/50">Community Story</span>
+                                <h4 class="text-lg md:text-xl font-bold text-white uppercase mt-2 group-hover:text-[#f472b6] transition-colors">Humada Stories</h4>
                                 <p class="text-[10px] md:text-xs text-gray-400 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#f472b6]">Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
                             </div>
                         </div>
@@ -531,6 +901,29 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Lắng nghe click đầu tiên trên toàn trang để khởi tạo audio (Luật của trình duyệt)
             document.body.addEventListener('click', initAudio, { once: true });
+
+            document.querySelectorAll('div[onclick*="openModal("]').forEach(card => {
+                card.classList.add('project-card');
+                card.classList.toggle('p1', !card.closest('#view-p2'));
+                card.classList.toggle('p2', Boolean(card.closest('#view-p2')));
+
+                card.addEventListener('click', (event) => {
+                    card.classList.add('is-selected');
+                    clearTimeout(card._selectedTimer);
+                    card._selectedTimer = setTimeout(() => card.classList.remove('is-selected'), 700);
+
+                    const ripple = document.createElement('span');
+                    ripple.className = 'project-card-ripple';
+                    const rect = card.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height) * 1.25;
+                    ripple.style.left = `${event.clientX - rect.left}px`;
+                    ripple.style.top = `${event.clientY - rect.top}px`;
+                    ripple.style.width = `${size}px`;
+                    ripple.style.height = `${size}px`;
+                    card.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 650);
+                });
+            });
 
             const hoverElements = document.querySelectorAll('.nav-tab, .player-card, .cursor-pointer, .btn-back, a, button');
             hoverElements.forEach(el => {
