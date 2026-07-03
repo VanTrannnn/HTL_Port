@@ -362,3 +362,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+        if (modal && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    }
+});
