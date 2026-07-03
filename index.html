@@ -799,9 +799,6 @@
                             <h2
                                 class="text-2xl md:text-3xl font-black text-[#c92a2a] uppercase border-b-2 border-red-100 pb-3 mb-6">
                                 Humada's View</h2>
-                            <p class="text-sm text-gray-600 mb-6 italic">A cinematic slider using the album images from
-                                the project assets.</p>
-
                             <div
                                 class="humada-view-slider relative rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white">
                                 <div class="humada-view-track flex transition-transform duration-500 ease-out">
@@ -1095,8 +1092,7 @@ Hội thao trường mình tuyệt thật, các cậu nhỉ?" onclick="openHumad
                                 <div class="flex flex-col gap-4 mb-8">
                                     <h3 class="text-2xl md:text-3xl font-black text-[#c92a2a] uppercase">Những bước chân
                                         cuối cùng</h3>
-                                    <p class="text-sm text-gray-500 max-w-3xl">Captured and edited photos while creating
-                                        engaging visual content and storytelling for the Humada Stories project.
+                                    <p class="text-sm text-gray-500 max-w-3xl">Click on a photo to read the full story.
                                         <br>Below is a selection of highlights — the full collection is available in the
                                         album.
                                         <br>
@@ -1172,11 +1168,7 @@ Cảm ơn vì đã đưa tôi đến tận đây." onclick="openHumadaModal(this
                             <div>
                                 <h2 class="text-2xl md:text-3xl font-black text-[#e85d75] uppercase mb-2">Humada's Story
                                 </h2>
-                                <p class="text-sm text-gray-600 mb-8 italic">Operating as a confession-style feature,
-                                    followers can submit anonymous stories which are then visualized and shared, forming
-                                    one
-                                    of the page's core recurring content formats.</p>
-
+                                <p class="text-sm text-gray-600 mb-8 italic">Click on a photo to read the full story.</p>
                                 <!-- Masonry Grid cho các thẻ vàng (bố cục scrapbook, so le + nghiêng nhẹ) -->
                                 <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
 
@@ -1510,9 +1502,7 @@ Bởi chăng, tình càng đau... thì càng đậm, tình càng đắng... sẽ
                 document.body.style.overflow = '';
             }
 
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') closeHumadaModal();
-            });
+            // (Xử lý phím Escape được gộp chung ở cuối file, xem "=== ESCAPE KEY HANDLER (GLOBAL) ===")
 
             // === AUDIO SYSTEM (RETRO 8-BIT SOUNDS) ===
             const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1905,12 +1895,28 @@ Bởi chăng, tình càng đau... thì càng đậm, tình càng đắng... sẽ
                 }
             }
 
-            // Close modal with Escape key (for inline script)
+            // === ESCAPE KEY HANDLER (GLOBAL) ===
+            // Thứ tự ưu tiên khi bấm ESC:
+            // 1) Nếu modal ảnh (Humada photo modal) đang mở -> đóng nó.
+            // 2) Ngược lại, nếu modal chi tiết project đang mở -> đóng nó.
+            // 3) Ngược lại, nếu đang ở trang chi tiết "Humada's Stories" -> quay về Player 2 Stats.
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' || e.key === 'Esc') {
-                    const pm = document.getElementById('project-modal');
-                    if (pm && !pm.classList.contains('hidden')) {
-                        closeModal();
+                if (e.key !== 'Escape' && e.key !== 'Esc') return;
+
+                const hModal = document.getElementById('humadaModal');
+                const hModalOpen = hModal && !hModal.classList.contains('hidden');
+
+                const pm = document.getElementById('project-modal');
+                const pmOpen = pm && !pm.classList.contains('hidden');
+
+                if (hModalOpen) {
+                    closeHumadaModal();
+                } else if (pmOpen) {
+                    closeModal();
+                } else {
+                    const humadaView = document.getElementById('view-project-humada');
+                    if (humadaView && humadaView.classList.contains('active')) {
+                        switchView('view-p2', true);
                     }
                 }
             });
