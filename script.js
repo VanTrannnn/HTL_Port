@@ -50,8 +50,8 @@ function updateMusicIcon() {
     const icon = document.getElementById('music-icon');
     if (!icon) return;
     icon.className = isPlaying
-        ? 'fas fa-volume-up text-white'
-        : 'fas fa-volume-mute text-white';
+        ? 'fas fa-volume-up text-slate-800'
+        : 'fas fa-volume-mute text-slate-800';
 }
 
 function startBackgroundMusic() {
@@ -105,59 +105,14 @@ function switchView(targetViewId, isBack = false) {
         targetView.classList.add('active');
         targetView.scrollTop = 0;
     }
+
+    document.dispatchEvent(new CustomEvent('viewchange', { detail: { id: targetViewId } }));
 }
 
-const projectsData = {
-    'parking-car': {
-        title: 'Parking Car',
-        badge: 'Pathfinding Puzzle',
-        color: '#38bdf8',
-        desc: 'Unity puzzle game where players draw paths to park cars while avoiding dynamic obstacles. 10 progressive levels designed with increasing difficulty. Implemented Line Renderer mechanics and complex collision logic.',
-        video: './assets/VanPrj/parking/gameplay.mp4',
-        images: ['./assets/VanPrj/parking/parking1.png', './assets/VanPrj/parking/parking2.png', './assets/VanPrj/parking/parking3.png'],
-        links: `
-            <a href="https://vantrannnn.itch.io/parking-car" target="_blank" class="text-xs font-bold text-black bg-[#38bdf8] px-4 py-2 rounded hover:bg-white transition-colors">PLAY GAME</a>
-            <a href="https://github.com/VanTrannnn/ParkingCar" target="_blank" class="text-xs font-bold text-[#38bdf8] border border-[#38bdf8] px-4 py-2 rounded hover:bg-[#38bdf8] hover:text-black transition-colors">GITHUB</a>
-        `
-    },
-    'ball-nim': {
-        title: 'Ball Nim',
-        badge: 'Logic Strategy',
-        color: '#38bdf8',
-        desc: 'Mathematical strategy game based on the classic Nim logic, challenging players to optimize moves and outsmart AI. Implemented an intelligent AI opponent utilizing the Nim-sum mathematical algorithm for three difficulty levels. Developed a responsive UI system with dynamic object scaling using Unity grid layout group to fit any quantity of items.',
-        video: './assets/VanPrj/ballnim/gameplay.mp4',
-        images: ['./assets/VanPrj/ballnim/nim1.png', './assets/VanPrj/ballnim/nim2.png', './assets/VanPrj/ballnim/nim3.png'],
-        links: `
-            <a href="https://vantrannnn.itch.io/ballnim" target="_blank" class="text-xs font-bold text-black bg-[#38bdf8] px-4 py-2 rounded hover:bg-white transition-colors">PLAY GAME</a>
-            <a href="https://github.com/VanTrannnn/BallNim" target="_blank" class="text-xs font-bold text-[#38bdf8] border border-[#38bdf8] px-4 py-2 rounded hover:bg-[#38bdf8] hover:text-black transition-colors">GITHUB</a>
-        `
-    },
-    'word-game': {
-        title: 'Word Game',
-        badge: 'Word Puzzle',
-        color: '#38bdf8',
-        isPortrait: true,
-        desc: 'Mobile word-puzzle game inspired by Wordle, focusing on logic and vocabulary. Implemented 3-state word check (Green/Yellow/Gray). Features dynamic levels from a 5,757-word dictionary and in-game currency for hint system.',
-        video: './assets/VanPrj/wordgame/gameplay.mp4',
-        images: ['./assets/VanPrj/wordgame/word1.png', './assets/VanPrj/wordgame/word2.png', './assets/VanPrj/wordgame/word3.png'],
-        links: `
-            <a href="https://github.com/VanTrannnn/WordGame" target="_blank" class="text-xs font-bold text-[#38bdf8] border border-[#38bdf8] px-4 py-2 rounded hover:bg-[#38bdf8] hover:text-black transition-colors">GITHUB REPO</a>
-        `
-    },
-    'grill-sort': {
-        title: 'Grill Sort',
-        badge: 'Sorting Puzzle (Prototype)',
-        color: '#eab308',
-        isPortrait: true,
-        desc: 'A casual sorting puzzle game where players arrange ingredients on grilling skewers. Currently in active development, focusing on building core sorting algorithms, prototype mechanics, and optimizing drag-and-drop logic in Unity.',
-        video: './assets/VanPrj/grillsort/gameplay.mp4',
-        images: ['./assets/VanPrj/grillsort/grill1.png', './assets/VanPrj/grillsort/grill2.png'],
-        links: `
-            <span class="text-xs font-bold text-gray-400 border border-gray-600 px-4 py-2 rounded bg-gray-800/50 cursor-not-allowed">PLAY GAME (SOON)</span>
-            <a href="https://github.com/VanTrannnn/" target="_blank" class="text-xs font-bold text-[#eab308] border border-[#eab308] px-4 py-2 rounded hover:bg-[#eab308] hover:text-black transition-colors">GITHUB REPO</a>
-        `
-    }
-};
+// Portfolio cá nhân (Player 2 - Lê Hữu Thịnh): trang "Humada's Stories" dùng
+// giao diện tuỳ biến riêng (xem #view-project-humada trong index.html) nên
+// không cần khai báo entry trong projectsData nữa.
+const projectsData = {};
 
 const modal = document.getElementById('project-modal');
 const modalContent = document.getElementById('modal-content');
@@ -172,7 +127,7 @@ function openModal(projectId) {
     badge.textContent = data.badge;
     badge.style.color = data.color;
     badge.style.borderColor = `${data.color}80`;
-    badge.style.backgroundColor = `${data.color}33`;
+    badge.style.backgroundColor = `${data.color}15`; // lighter background
 
     document.getElementById('modal-title').textContent = data.title;
     document.getElementById('modal-desc').innerHTML = data.desc;
@@ -188,10 +143,10 @@ function openModal(projectId) {
     mainImg.id = 'modal-main-img';
 
     if (isPortrait) {
-        imgContainer.className = 'w-full h-[400px] md:h-[500px] bg-[#050505] rounded-lg border border-gray-700 overflow-hidden relative flex justify-center items-center';
+        imgContainer.className = 'w-full h-[400px] md:h-[500px] bg-slate-100 rounded-lg border border-slate-200 overflow-hidden relative flex justify-center items-center';
         mainImg.className = 'h-full w-auto max-w-full object-contain transition-opacity duration-300';
     } else {
-        imgContainer.className = 'w-full h-48 md:h-80 bg-black rounded-lg border border-gray-700 overflow-hidden relative flex justify-center items-center';
+        imgContainer.className = 'w-full h-48 md:h-80 bg-slate-100 rounded-lg border border-slate-200 overflow-hidden relative flex justify-center items-center shadow-inner';
         mainImg.className = 'w-full h-full object-cover transition-opacity duration-300';
     }
 
@@ -249,9 +204,9 @@ function openModal(projectId) {
         thumb.src = data.images[0] || 'https://placehold.co/100x100?text=Video';
 
         if (isPortrait) {
-            thumb.className = `w-12 h-20 md:w-16 md:h-28 object-cover rounded border-2 transition-colors border-[${data.color}] opacity-80 group-hover:opacity-100`;
+            thumb.className = `w-12 h-20 md:w-16 md:h-28 object-cover rounded border-2 transition-colors border-[${data.color}] opacity-80 group-hover:opacity-100 shadow-sm`;
         } else {
-            thumb.className = `w-20 h-14 md:w-24 md:h-16 object-cover rounded border-2 transition-colors border-[${data.color}] opacity-80 group-hover:opacity-100`;
+            thumb.className = `w-20 h-14 md:w-24 md:h-16 object-cover rounded border-2 transition-colors border-[${data.color}] opacity-80 group-hover:opacity-100 shadow-sm`;
         }
         thumb.style.borderColor = data.color;
 
@@ -267,7 +222,7 @@ function openModal(projectId) {
             playSelectSound();
             setMainMedia('video', data.video);
 
-            Array.from(thumbContainer.querySelectorAll('img')).forEach(child => child.style.borderColor = '#374151');
+            Array.from(thumbContainer.querySelectorAll('img')).forEach(child => child.style.borderColor = '#e2e8f0'); // slate-200
             thumb.style.borderColor = data.color;
         };
 
@@ -279,9 +234,9 @@ function openModal(projectId) {
         thumb.src = imgSrc;
 
         if (isPortrait) {
-            thumb.className = `w-12 h-20 md:w-16 md:h-28 object-cover rounded cursor-pointer border-2 transition-colors hover:border-white ${(!data.video && index === 0) ? 'border-[' + data.color + ']' : 'border-gray-700'} flex-shrink-0`;
+            thumb.className = `w-12 h-20 md:w-16 md:h-28 object-cover rounded cursor-pointer border-2 transition-colors hover:border-slate-400 ${(!data.video && index === 0) ? 'border-[' + data.color + ']' : 'border-slate-200'} flex-shrink-0 shadow-sm`;
         } else {
-            thumb.className = `w-20 h-14 md:w-24 md:h-16 object-cover rounded cursor-pointer border-2 transition-colors hover:border-white ${(!data.video && index === 0) ? 'border-[' + data.color + ']' : 'border-gray-700'} flex-shrink-0`;
+            thumb.className = `w-20 h-14 md:w-24 md:h-16 object-cover rounded cursor-pointer border-2 transition-colors hover:border-slate-400 ${(!data.video && index === 0) ? 'border-[' + data.color + ']' : 'border-slate-200'} flex-shrink-0 shadow-sm`;
         }
 
         if (!data.video && index === 0) thumb.style.borderColor = data.color;
@@ -292,7 +247,7 @@ function openModal(projectId) {
             playSelectSound();
             setMainMedia('image', imgSrc);
 
-            Array.from(thumbContainer.querySelectorAll('img')).forEach(child => child.style.borderColor = '#374151');
+            Array.from(thumbContainer.querySelectorAll('img')).forEach(child => child.style.borderColor = '#e2e8f0'); // slate-200
             thumb.style.borderColor = data.color;
         };
         thumbContainer.appendChild(thumb);
@@ -363,11 +318,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Close modal with Escape key
+// === DINO JUMP (nhấn Space để nhảy, giống game Dino của Chrome) ===
+function triggerDinoJump() {
+    const wrap = document.querySelector('.dino-character-wrap');
+    if (!wrap || wrap.classList.contains('jumping')) return; // đang nhảy thì bỏ qua (không double-jump)
+
+    initAudio();
+    playTone(520, 'square', 0.12, 0.05); // âm thanh nhảy
+
+    wrap.classList.add('jumping');
+}
+
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' || e.key === 'Esc') {
-        if (modal && !modal.classList.contains('hidden')) {
-            closeModal();
+    if (e.code !== 'Space' && e.key !== ' ') return;
+
+    // Chỉ cho nhảy khi đang ở màn hình chính (dino start screen)
+    const homeView = document.getElementById('view-select');
+    if (!homeView || !homeView.classList.contains('active')) return;
+
+    e.preventDefault(); // chặn trình duyệt cuộn trang khi bấm Space
+    triggerDinoJump();
+});
+
+// Gỡ class 'jumping' khi animation nhảy kết thúc để có thể nhảy lại
+document.addEventListener('animationend', (e) => {
+    if (e.animationName === 'dinoJump' && e.target.classList.contains('dino-character-wrap')) {
+        e.target.classList.remove('jumping');
+    }
+});
+
+// === ESCAPE KEY HANDLER (GLOBAL) ===
+// Thứ tự ưu tiên: 1) modal ảnh Humada  2) modal chi tiết project
+// 3) đang ở trang "Humada's Stories" -> quay về danh sách Projects
+document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' && e.key !== 'Esc') return;
+
+    const hModal = document.getElementById('humadaModal');
+    const hModalOpen = hModal && !hModal.classList.contains('hidden');
+
+    const pmOpen = modal && !modal.classList.contains('hidden');
+
+    if (hModalOpen && typeof closeHumadaModal === 'function') {
+        closeHumadaModal();
+    } else if (pmOpen) {
+        closeModal();
+    } else {
+        const humadaView = document.getElementById('view-project-humada');
+        if (humadaView && humadaView.classList.contains('active')) {
+            switchView('view-all-projects', true);
         }
     }
 });
