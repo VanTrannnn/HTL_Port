@@ -272,6 +272,28 @@
             border-bottom-color: transparent;
         }
 
+        /* Biến thể tối của .nav-bottom: giữ nguyên cấu trúc/spacing/hành vi
+           (indicator top-border khi active, mũi tên ▶ khi hover) như các tab
+           nền sáng, chỉ đổi màu chữ/nền cho phù hợp nền tối (vd: About Me). */
+        .nav-bottom-dark {
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .nav-bottom-dark .nav-tab {
+            color: #94a3b8;
+        }
+
+        .nav-bottom-dark .nav-tab:hover,
+        .nav-bottom-dark .nav-tab.active {
+            color: #22d3ee;
+        }
+
+        .nav-bottom-dark .nav-tab.active {
+            border-top-color: #22d3ee;
+            border-bottom-color: transparent;
+        }
+
         @media (max-width: 650px) {
             .monitor-bezel {
                 width: 100vw;
@@ -897,13 +919,13 @@
                 </div>
 
                 <!-- Bottom Nav -->
-                <div class="w-full flex flex-wrap justify-center gap-3 md:gap-8 px-2 py-3 pb-5 md:px-4 md:py-4 md:pb-8 shrink-0 bg-slate-900/80 backdrop-blur-sm relative z-10 border-t border-slate-700/50 mt-auto">
-                    <button class="nav-tab !text-slate-400 hover:!text-[#22d3ee]" style="padding-bottom: 0.25rem;" onclick="switchView('view-select')">HOME</button>
-                    <button class="nav-tab active !text-[#22d3ee] !border-[#22d3ee]" style="padding-bottom: 0.25rem;" onclick="switchView('view-about')">ABOUT ME</button>
-                    <button class="nav-tab !text-slate-400 hover:!text-[#22d3ee]" style="padding-bottom: 0.25rem;" onclick="switchView('view-experience')">EXPERIENCE</button>
-                    <button class="nav-tab !text-slate-400 hover:!text-[#22d3ee]" style="padding-bottom: 0.25rem;" onclick="switchView('view-all-projects')">PROJECTS</button>
-                    <button class="nav-tab !text-slate-400 hover:!text-[#22d3ee]" style="padding-bottom: 0.25rem;" onclick="switchView('view-awards')">HONORS & AWARDS</button>
-                    <button class="nav-tab !text-slate-400 hover:!text-[#22d3ee]" style="padding-bottom: 0.25rem;" onclick="switchView('view-other')">OTHER</button>
+                <div class="w-full flex flex-wrap justify-center gap-3 md:gap-8 p-2 md:p-4 shrink-0 nav-bottom nav-bottom-dark relative z-10 mt-auto">
+                    <button class="nav-tab" onclick="switchView('view-select')">HOME</button>
+                    <button class="nav-tab active" onclick="switchView('view-about')">ABOUT ME</button>
+                    <button class="nav-tab" onclick="switchView('view-experience')">EXPERIENCE</button>
+                    <button class="nav-tab" onclick="switchView('view-all-projects')">PROJECTS</button>
+                    <button class="nav-tab" onclick="switchView('view-awards')">HONORS & AWARDS</button>
+                    <button class="nav-tab" onclick="switchView('view-other')">OTHER</button>
                 </div>
             </div>
 
@@ -1106,8 +1128,8 @@
 
                     <div
                         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-3xl md:max-w-none mx-auto justify-items-center">
-                        <div class="project-card relative h-56 border-2 border-slate-200 rounded-xl overflow-hidden cursor-pointer group hover:border-[#ff4fa3] hover:shadow-md transition-all p2 w-full"
-                            onclick="switchView('view-project-humada')">
+                        <a href="project-humada.html" onclick="openHumadaProjectModal(event)"
+                            class="project-card relative h-56 border-2 border-slate-200 rounded-xl overflow-hidden cursor-pointer group hover:border-[#ff4fa3] hover:shadow-md transition-all p2 w-full block">
                             <img src="./assets/ThinhPrj/hs/hs.png" alt="Storytelling Design"
                                 onerror="this.src='https://placehold.co/600x400/000/fff?text=Humada'"
                                 class="project-card-image absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300">
@@ -1125,7 +1147,7 @@
                                     class="text-[10px] md:text-xs text-slate-300 font-medium mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0 group-hover:text-white">
                                     Click to view details <i class="fa-solid fa-arrow-right ml-1"></i></p>
                             </div>
-                        </div>
+                        </a>
 
                         <a href="https://thinh-le-huu.figma.site/" target="_blank"
                             class="project-card relative h-56 w-full rounded-xl overflow-hidden cursor-pointer group flex flex-col items-center justify-center gap-3 border-2 border-dashed border-slate-300 hover:border-[#ff4fa3] bg-slate-50 hover:bg-[#ff4fa3]/5 transition-all p2 text-center px-4">
@@ -1148,351 +1170,731 @@
                 </div>
             </div>
 
-            <!-- SCENE 4: CUSTOM PORTFOLIO PAGE (HUMADA'S STORIES - RETRO ARCADE STYLE) -->
-            <div id="view-project-humada" class="game-view">
+        </div>
 
+        <!-- MODAL UI: HUMADA'S STORIES (nội dung nhúng trực tiếp, không dùng iframe) -->
+        <div id="humada-project-modal"
+            class="hidden fixed inset-0 z-[300] items-center justify-center p-2 md:p-6 bg-slate-950/90 backdrop-blur-sm"
+            onclick="if(event.target === this) closeHumadaProjectModal()">
+            <div
+                class="relative w-full h-full max-w-6xl mx-auto bg-white rounded-xl shadow-2xl overflow-y-auto flex flex-col p-4 md:p-8"
+                onclick="event.stopPropagation()">
+                <button onclick="closeHumadaProjectModal()"
+                    class="absolute top-3 right-3 z-20 bg-slate-900/90 hover:bg-[#ff4fa3] text-white rounded-full w-9 h-9 flex items-center justify-center shadow-md transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+
+                <!-- Thiết kế mô phỏng Layout Design Portfolio (Chữ đỏ, Nền trắng) -->
                 <div
-                    class="flex justify-between items-center mb-6 py-3 border-b-2 border-slate-300 shrink-0 bg-[#0f172a] text-white px-4 rounded-t-xl font-mono">
-                    <button
-                        class="btn-back text-xs md:text-sm !border-slate-500 !text-slate-200 hover:!bg-white hover:!text-slate-900 !rounded"
-                        onclick="switchView('view-all-projects', true)">
-                        <i class="fa-solid fa-caret-left mr-2"></i> ABORT / BACK
-                    </button>
-                    <div class="text-[#ff4fa3] font-black tracking-widest text-xs md:text-base animate-pulse">
-                        [ STAGE 1: HUMADA'S STORIES ]
-                    </div>
-                </div>
+                    class="w-full max-w-4xl mx-auto bg-[#faf9f6] text-gray-800 font-sans rounded-xl shadow-2xl overflow-hidden mb-12 shrink-0 h-auto">
 
-                <div
-                    class="w-full max-w-5xl mx-auto bg-[#0f172a] text-slate-200 font-mono rounded-b-xl shadow-[0_0_35px_rgba(0,0,0,0.4)] border-4 border-slate-700 overflow-hidden mb-12 shrink-0 h-auto p-4 md:p-8 space-y-12">
+                    <!-- Banner Cover -->
+                    <div class="w-full h-48 md:h-72 relative overflow-hidden">
+                        <img src="./assets/ThinhPrj/hs/hs.png" alt="Cover" class="w-full h-full object-cover">
 
-                    <!-- 1. HEADER & BANNER: MISSION BRIDGING -->
-                    <div
-                        class="relative rounded-lg overflow-hidden border-2 border-[#22d3ee] shadow-[0_0_15px_rgba(34,211,238,0.3)] bg-slate-900">
-                        <div class="h-56 md:h-80 w-full relative overflow-hidden">
-                            <img src="./assets/ThinhPrj/hs/hs.png" alt="Humada Cover"
-                                class="w-full h-full object-cover opacity-40 filter contrast-125"
-                                onerror="this.src='https://placehold.co/800x400/0f172a/22d3ee?text=Humada+Cover'">
-                            <div
-                                class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent">
-                            </div>
-                        </div>
-                        <div class="absolute bottom-4 left-4 md:bottom-6 md:left-6 right-4 space-y-2">
-                            <div
-                                class="inline-block bg-[#ff4fa3] text-slate-950 font-black text-[10px] md:text-xs px-2 py-0.5 tracking-widest uppercase rounded-sm shadow">
-                                ★ COMMUNITY STORYTELLING ★
-                            </div>
+                        <!-- Overlay tối nhẹ để chữ dễ đọc -->
+                        <div class="absolute inset-0 bg-black/35"></div>
+
+                        <!-- Gradient đen thay vì đỏ -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+                        <div class="absolute bottom-0 left-0 p-6 md:p-10 w-full">
                             <h1
-                                class="text-2xl md:text-5xl font-black text-white tracking-wider uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                                class="text-3xl md:text-5xl font-black text-white tracking-tight mb-2 uppercase drop-shadow-md">
                                 Humada's Stories
                             </h1>
-                            <p class="text-slate-300 text-xs md:text-sm tracking-wide font-sans italic max-w-2xl">
-                                "Connecting memories, emotions, and everyday moments of Huynh Man Dat High School for
-                                the Gifted."
+                            <p class="text-white/90 text-sm md:text-lg italic tracking-wide">
+                                Community Storytelling page for Huynh Man Dat High School for the Gifted
                             </p>
                         </div>
                     </div>
 
-                    <!-- 2. QUEST BRIEF & STATS (ABOUT & OVERVIEW) -->
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                        <div
-                            class="md:col-span-7 bg-slate-900/90 border-2 border-slate-700 p-5 rounded-lg space-y-4 shadow-inner">
-                            <div class="flex items-center gap-2 text-[#22d3ee] border-b border-slate-800 pb-2">
-                                <i class="fa-solid fa-terminal animate-pulse"></i>
-                                <h2 class="font-bold text-sm md:text-base tracking-widest uppercase">MISSION BRIEFING
-                                </h2>
-                            </div>
-                            <div
-                                class="space-y-3 text-xs md:text-sm text-slate-300 font-sans leading-relaxed text-justify">
-                                <p>
-                                    <strong
-                                        class="text-white font-mono uppercase text-xs text-[#ff4fa3]">[ORIGIN]</strong>
-                                    Founded by students and alumni, Humada's Stories acts as a digital memory capsule
-                                    for Huynh Man Dat High School for the Gifted.
-                                </p>
-                                <p>
-                                    <strong class="text-white font-mono uppercase text-xs text-[#22d3ee]">[CORE
-                                        VALUE]</strong> Rather than focusing on achievements, the platform highlights
-                                    the human side of school life: nostalgia, personal growth, and quiet campus moments
-                                    that resonate across generations.
-                                </p>
-                            </div>
-                            <div class="pt-2">
-                                <a href="https://www.facebook.com/humadastories" target="_blank"
-                                    class="inline-flex items-center gap-2 bg-[#22d3ee]/20 hover:bg-[#22d3ee] text-[#22d3ee] hover:text-slate-950 border border-[#22d3ee] px-4 py-2 rounded text-xs font-bold font-mono tracking-wider transition-all shadow-[0_0_10px_rgba(34,211,238,0.2)]">
-                                    <span>VISIT FACEBOOK PAGE</span> <i
-                                        class="fa-solid fa-arrow-up-right-from-square"></i>
-                                </a>
-                            </div>
-                        </div>
+                    <!-- Nội Dung Chi Tiết -->
+                    <div class="p-6 md:p-10 flex flex-col gap-10 lg:gap-14">
 
-                        <div
-                            class="md:col-span-5 bg-slate-900/90 border-2 border-[#ff4fa3] p-5 rounded-lg space-y-4 shadow-[0_0_15px_rgba(255,79,163,0.15)]">
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                                <span class="text-[#ff4fa3] font-bold text-sm tracking-widest uppercase"><i
-                                        class="fa-solid fa-user-shield mr-1"></i> PLAYER ROLE</span>
-                                <span
-                                    class="bg-[#ff4fa3] text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded">LVL
-                                    99</span>
-                            </div>
-                            <div class="text-base font-black text-white tracking-wide uppercase">
-                                Co-Founder & Content Lead
-                            </div>
-                            <ul class="space-y-2 text-xs text-slate-300 font-sans">
-                                <li class="flex items-start gap-2">
-                                    <span class="text-[#ff4fa3] font-mono font-bold">►</span>
-                                    <span>Defined storytelling tone and visual narrative direction.</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-[#ff4fa3] font-mono font-bold">►</span>
-                                    <span>Curated and authored engaging confession-style content.</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-[#ff4fa3] font-mono font-bold">►</span>
-                                    <span>Grew community reach to <strong>4,900+ active followers</strong>.</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                        <!-- 1. Text Intro -->
+                        <!-- 1. About -->
+<div class="space-y-10">
 
-                    <!-- 3. LEVEL CUTSCENES (HUMADA'S VIEW SLIDER) -->
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between border-b-2 border-slate-700 pb-2">
+    <!-- What is Humada's Stories -->
+    <div>
+        <h2 class="text-2xl md:text-3xl font-black text-[#ff5252] uppercase border-b-2 border-red-100 pb-3 mb-6">
+            What is Humada's Stories?
+        </h2>
+
+        <div class="space-y-5 text-sm text-gray-600 leading-relaxed text-justify">
+            <p>
+                <strong>Humada's Stories</strong> is a student-founded storytelling platform
+                created by alumni and students of Huynh Man Dat High School.
+            </p>
+
+            <p>
+                The page documents memories, emotions, and everyday moments of high school
+                life—from small campus details to shared experiences that shaped a generation
+                of students.
+            </p>
+
+            <p>
+                Rather than focusing on achievements or events, Humada's Stories highlights
+                the human side of school life: nostalgia, growth, and the quiet moments that
+                stay long after graduation.
+            </p>
+
+            <a href="https://www.facebook.com/humadastories"
+                target="_blank"
+                class="inline-flex items-center font-bold text-[#ff5252] hover:underline uppercase tracking-wide">
+                SEE MORE ON FACEBOOK →
+            </a>
+        </div>
+    </div>
+
+    <!-- Project Overview -->
+    <div class="bg-gray-100 p-6 rounded-xl border-l-4 border-[#ff5252]">
+        <h2 class="text-2xl font-black text-[#ff5252] mb-6 uppercase">
+            Project Overview
+        </h2>
+
+        <ul class="space-y-3 text-sm text-gray-700">
+            <li><strong>Project Type:</strong> Community storytelling</li>
+            <li><strong>Founded by:</strong> Former students of Huynh Man Dat High School for the Gifted</li>
+            <li><strong>Platform:</strong> Facebook Page</li>
+            <li><strong>Audience:</strong> Students, alumni, and teachers of HMD High School</li>
+            <li><strong>Current Reach:</strong> 4.9K followers</li>
+        </ul>
+    </div>
+
+    <!-- My Role -->
+    <div>
+        <h2 class="text-2xl font-black text-[#ff5252] uppercase border-b-2 border-red-100 pb-3 mb-6">
+            What was my role?
+        </h2>
+
+        <p class="text-lg font-semibold text-gray-800 mb-5">
+            Co-founder &amp; Content Contributor
+        </p>
+
+        <ul class="list-disc list-inside space-y-3 text-sm text-gray-600 leading-relaxed">
+            <li>Defined storytelling direction and tone.</li>
+            <li>Wrote and curated narrative-driven content.</li>
+            <li>Maintained consistency across posts and visuals.</li>
+        </ul>
+    </div>
+
+</div>
+
+                        <!-- 3. Humada's View (Image Slider using assets/ThinhPrj/hs/view/*.jpg) -->
+                        <div>
                             <h2
-                                class="text-base md:text-xl font-black text-[#22d3ee] tracking-widest uppercase flex items-center gap-2">
-                                <i class="fa-solid fa-camera-retro"></i> STAGE CUTSCENES: HUMADA'S VIEW
-                            </h2>
-                            <span class="text-[10px] text-slate-400 font-mono">[ AUTOPLAY ENABLED ]</span>
-                        </div>
-
-                        <div
-                            class="humada-view-slider relative rounded-lg overflow-hidden border-2 border-slate-600 bg-black shadow-inner">
-                            <div class="humada-view-track flex transition-transform duration-500 ease-out">
-                                <div class="humada-view-slide min-w-full bg-black flex items-center justify-center"><img
-                                        src="./assets/ThinhPrj/hs/view/1.jpg" alt="View 1"
-                                        class="w-full h-64 md:h-[480px] object-contain"
-                                        onerror="this.src='https://placehold.co/800x480/0f172a/22d3ee?text=View+1'">
-                                </div>
-                                <div class="humada-view-slide min-w-full bg-black flex items-center justify-center"><img
-                                        src="./assets/ThinhPrj/hs/view/2.jpg" alt="View 2"
-                                        class="w-full h-64 md:h-[480px] object-contain"
-                                        onerror="this.src='https://placehold.co/800x480/0f172a/22d3ee?text=View+2'">
-                                </div>
-                                <div class="humada-view-slide min-w-full bg-black flex items-center justify-center"><img
-                                        src="./assets/ThinhPrj/hs/view/3.jpg" alt="View 3"
-                                        class="w-full h-64 md:h-[480px] object-contain"
-                                        onerror="this.src='https://placehold.co/800x480/0f172a/22d3ee?text=View+3'">
-                                </div>
-                            </div>
-
-                            <button
-                                class="humada-view-prev absolute top-1/2 left-4 -translate-y-1/2 z-10 rounded bg-slate-900/90 border border-[#22d3ee] text-[#22d3ee] hover:bg-[#22d3ee] hover:text-slate-950 w-10 h-10 flex items-center justify-center shadow transition">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </button>
-                            <button
-                                class="humada-view-next absolute top-1/2 right-4 -translate-y-1/2 z-10 rounded bg-slate-900/90 border border-[#22d3ee] text-[#22d3ee] hover:bg-[#22d3ee] hover:text-slate-950 w-10 h-10 flex items-center justify-center shadow transition">
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </button>
-                            <div class="humada-view-dots absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4. BONUS STAGES: SPECIAL SERIES -->
-                    <div class="space-y-10">
-                        <div class="bg-slate-900/60 border-2 border-slate-700 p-4 md:p-6 rounded-lg space-y-4">
+                                class="text-2xl md:text-3xl font-black text-[#ff5252] uppercase border-b-2 border-red-100 pb-3 mb-6">
+                                Humada's View</h2>
                             <div
-                                class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-3 gap-2">
-                                <div>
-                                    <span
-                                        class="text-[10px] bg-[#ff4fa3]/20 text-[#ff4fa3] border border-[#ff4fa3]/50 px-2 py-0.5 rounded font-mono">BONUS
-                                        CHAPTER 01</span>
-                                    <h3 class="text-lg md:text-2xl font-black text-white tracking-wide uppercase mt-1">
-                                        "ĐÓ LÀ LẦN ĐẦU..." SERIES</h3>
+                                class="humada-view-slider relative rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-white">
+                                <div class="humada-view-track flex transition-transform duration-500 ease-out">
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/1.jpg" alt="View 1"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/2.jpg" alt="View 2"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/3.jpg" alt="View 3"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/4.jpg" alt="View 4"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/5.jpg" alt="View 5"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/6.jpg" alt="View 6"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/7.jpg" alt="View 7"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/8.jpg" alt="View 8"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/9.jpg" alt="View 9"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/10.jpg" alt="View 10"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/11.jpg" alt="View 11"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/12.jpg" alt="View 12"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/13.jpg" alt="View 13"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/14.jpg" alt="View 14"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
+                                    <div class="humada-view-slide min-w-full bg-black flex items-center justify-center">
+                                        <img src="./assets/ThinhPrj/hs/view/15.jpg" alt="View 15"
+                                            class="w-full h-64 md:h-[520px] lg:h-[600px] object-contain">
+                                    </div>
                                 </div>
-                                <p class="text-xs text-slate-400 font-sans">► Click any item to inspect story memory.
-                                </p>
-                            </div>
 
-                            <div class="relative group">
-                                <div id="firsttime-slider"
-                                    class="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                                    <img src="./assets/ThinhPrj/hs/firsttime/1.jpg" alt="[CHUYÊN MỤC: “ĐÓ LÀ LẦN ĐẦU…”]"
-                                        class="flex-none w-52 h-52 md:w-60 md:h-60 rounded border-2 border-slate-700 hover:border-[#ff4fa3] object-cover shadow-md snap-start cursor-pointer hover:scale-[1.03] transition-all"
-                                        onerror="this.src='https://placehold.co/400x400/0f172a/ff4fa3?text=Stage+1'"
-                                        data-title="[CHUYÊN MỤC: “ĐÓ LÀ LẦN ĐẦU…”]"
-                                        data-content="Chào cậu,&#10;&#10;Có bao lần đầu ở Huỳnh mà cậu muốn nhớ?&#10;Có bao lần đầu ở Huỳnh mà cậu muốn gọi tên?&#10;&#10;Tại sao không kết những lần đầu ấy thành câu chữ để một ngày kia khi nhìn lại, ta sẽ hoài niệm về một giấc mơ ta đã từng có, về những người ta đã từng biết, về một ta với bao kỉ niệm trong quá khứ, không muốn quên?&#10;&#10;Hãy để Humada’s Stories với chuyên mục “Đó là lần đầu…” giữ lại những lần đầu tiên sâu sắc ở Huỳnh của cậu nhé!"
-                                        onclick="openHumadaModal(this)">
-
-                                    <img src="./assets/ThinhPrj/hs/firsttime/2.jpg" alt="[ĐÓ LÀ LẦN ĐẦU MÌNH GẶP CẬU]"
-                                        class="flex-none w-52 h-52 md:w-60 md:h-60 rounded border-2 border-slate-700 hover:border-[#ff4fa3] object-cover shadow-md snap-start cursor-pointer hover:scale-[1.03] transition-all"
-                                        onerror="this.src='https://placehold.co/400x400/0f172a/ff4fa3?text=Stage+2'"
-                                        data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH GẶP CẬU]"
-                                        data-content="Tại Huỳnh nơi tôi đã từng gặp cậu ấy, và vì cậu ấy tôi phải cố gắng quay lại..."
-                                        onclick="openHumadaModal(this)">
-
-                                    <img src="./assets/ThinhPrj/hs/firsttime/3.jpg"
-                                        alt="[ĐÓ LÀ LẦN ĐẦU MÌNH ĐẾN KÝ TÚC XÁ]"
-                                        class="flex-none w-52 h-52 md:w-60 md:h-60 rounded border-2 border-slate-700 hover:border-[#ff4fa3] object-cover shadow-md snap-start cursor-pointer hover:scale-[1.03] transition-all"
-                                        onerror="this.src='https://placehold.co/400x400/0f172a/ff4fa3?text=Stage+3'"
-                                        data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH ĐẾN KÝ TÚC XÁ]"
-                                        data-content="Ngày đầu đến ký túc xá sẽ có những thứ bạn chẳng ngờ?&#10;&#10;Không ngờ được rằng mình sẽ sống với những đứa &quot;tâm thần&quot; hợp cạ.&#10;&#10;Không ngờ được rằng sinh nhật mỗi năm sẽ ăn thêm chiếc bánh của bạn cùng phòng.&#10;&#10;Cũng có ai ngờ được rằng, lần đầu đó chớp mắt một tích tắc đã xa phòng, xa bạn, xa ký túc xá đến mấy mùa thu."
-                                        onclick="openHumadaModal(this)">
-                                </div>
-
-                                <button type="button" onclick="scrollThumbSlider('firsttime-slider', -260)"
-                                    class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1/2 -left-4 -translate-y-1/2 z-10 rounded bg-[#ff4fa3] text-slate-950 w-9 h-9 items-center justify-center shadow-lg font-black hover:scale-110">
+                                <button
+                                    class="humada-view-prev absolute top-1/2 left-4 -translate-y-1/2 z-10 rounded-full bg-slate-900/80 border border-white/10 text-white w-10 h-10 flex items-center justify-center shadow-lg hover:bg-slate-800 transition">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </button>
-                                <button type="button" onclick="scrollThumbSlider('firsttime-slider', 260)"
-                                    class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1/2 -right-4 -translate-y-1/2 z-10 rounded bg-[#ff4fa3] text-slate-950 w-9 h-9 items-center justify-center shadow-lg font-black hover:scale-110">
+                                <button
+                                    class="humada-view-next absolute top-1/2 right-4 -translate-y-1/2 z-10 rounded-full bg-slate-900/80 border border-white/10 text-white w-10 h-10 flex items-center justify-center shadow-lg hover:bg-slate-800 transition">
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </button>
+
+                                <div class="humada-view-dots absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="bg-slate-900/60 border-2 border-slate-700 p-4 md:p-6 rounded-lg space-y-4">
-                            <div
-                                class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-3 gap-2">
-                                <div>
-                                    <span
-                                        class="text-[10px] bg-[#22d3ee]/20 text-[#22d3ee] border border-[#22d3ee]/50 px-2 py-0.5 rounded font-mono">BONUS
-                                        CHAPTER 02</span>
-                                    <h3 class="text-lg md:text-2xl font-black text-white tracking-wide uppercase mt-1">
-                                        "NHỮNG BƯỚC CHÂN CUỐI CÙNG"</h3>
-                                </div>
-                                <p class="text-xs text-slate-400 font-sans">► Farewell stories dedicated to graduating
-                                    seniors.</p>
-                            </div>
-
-                            <div class="relative group">
-                                <div id="laststeps-slider"
-                                    class="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-
-                                    <img src="./assets/ThinhPrj/hs/story1.jpg" alt="Bước chân đầu tiên"
-                                        class="flex-none w-52 h-52 md:w-60 md:h-60 rounded border-2 border-slate-700 hover:border-[#22d3ee] object-cover shadow-md snap-start cursor-pointer hover:scale-[1.03] transition-all"
-                                        onerror="this.src='https://placehold.co/400x400/0f172a/22d3ee?text=Stage+1'"
-                                        data-title="Vài lời nhắn gửi thanh xuân..."
-                                        data-content="À thì ra lời nói :&quot;Ba năm thật ngắn...!&quot; ấy của cô chủ nhiệm chẳng phải là lời răn dạy hay nói quá, mà nó là thật. Ba năm chớp mắt một cái thì đã trôi qua trong thoáng chốc.&#10;&#10;Chị muốn gửi đến các em lớp dưới vài lời, nếu các em còn cơ hội, còn thời gian, còn sức chơi thì hãy tận hưởng trọn vẹn thanh xuân của mình, đừng để nó trôi qua một cách vô nghĩa, các em nhé!&#10;&#10;Gửi ở đây, những bước chân cuối cùng.&#10;Chuyên XX K28."
-                                        onclick="openHumadaModal(this)">
-
-                                    <img src="./assets/ThinhPrj/hs/story2.jpg" alt="Lời tạm biệt cuối cùng"
-                                        class="flex-none w-52 h-52 md:w-60 md:h-60 rounded border-2 border-slate-700 hover:border-[#22d3ee] object-cover shadow-md snap-start cursor-pointer hover:scale-[1.03] transition-all"
-                                        onerror="this.src='https://placehold.co/400x400/0f172a/22d3ee?text=Stage+2'"
-                                        data-title="Lời tạm biệt cuối cùng"
-                                        data-content="3 năm thật sự rất ngắn ngủi, trong 3 năm ấy tôi đã có những chuyến đi chơi xa cùng bạn bè, những áp lực vào mùa thi cử, và quan trọng hơn hết tôi đã gặp được cậu...&#10;&#10;Cấp 3 không dài đâu, nó nhanh lắm đấy, hãy tận hưởng khoảng thời gian ấy một cách trọn vẹn nhất. Hãy tạo cho mình một khoảng trời thật đẹp ở đây nhé, để khi về lại bạn sẽ tự hào vì mình đã từng là học sinh dưới mái trường Huỳnh này ~"
-                                        onclick="openHumadaModal(this)">
-
-                                    <img src="./assets/ThinhPrj/hs/story3.jpg" alt="Những bước chân cuối cùng"
-                                        class="flex-none w-52 h-52 md:w-60 md:h-60 rounded border-2 border-slate-700 hover:border-[#22d3ee] object-cover shadow-md snap-start cursor-pointer hover:scale-[1.03] transition-all"
-                                        onerror="this.src='https://placehold.co/400x400/0f172a/22d3ee?text=Stage+3'"
-                                        data-title="Những bước chân cuối cùng"
-                                        data-content="Nhớ hồi trước mới vào lớp 10 mình hay đá cầu lắm, cứ chiều chiều là lại vào trường chơi... Thật tuyệt khi gặp được anh chị, những người góp phần nâng đỡ những bước chân của mình ở Huỳnh.&#10;&#10;Giờ thì cũng là những ngày cuối cấp của mình ở đây, và mình cũng rời xa mọi người như lúc trước. Chắc là ai cũng sẽ có câu chuyện của riêng mình, và ở đâu đó cũng sẽ có người tiếc nuối sự chia ly những người mà mình đã từng thân thiết bấy lâu."
-                                        onclick="openHumadaModal(this)">
+                        <!-- 4. Special Series -->
+                        <div class="shrink-0 h-auto mb-6">
+                            <!-- Đó là lần đầu Series -->
+                            <div class="humada-slider-section mb-12">
+                                <div class="flex flex-col gap-4 mb-8">
+                                    <div class="relative group">
+                                        <h3 class="text-2xl md:text-3xl font-black text-[#ff5252] uppercase">"Đó là lần
+                                            đầu..." Series</h3>
+                                        <p class="text-sm text-gray-500 max-w-3xl mt-2">Click on a photo to read the
+                                            full story.<br>
+                                            <a href="https://www.facebook.com/media/set/?vanity=humadastories&set=a.154700419474893"
+                                                target="_blank" rel="noopener noreferrer">
+                                                <span class="text-[#ff5252] hover:underline">View the full photo album
+                                                    on Facebook</span>
+                                            </a>
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <button type="button" onclick="scrollThumbSlider('laststeps-slider', -260)"
-                                    class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1/2 -left-4 -translate-y-1/2 z-10 rounded bg-[#22d3ee] text-slate-950 w-9 h-9 items-center justify-center shadow-lg font-black hover:scale-110">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </button>
-                                <button type="button" onclick="scrollThumbSlider('laststeps-slider', 260)"
-                                    class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1/2 -right-4 -translate-y-1/2 z-10 rounded bg-[#22d3ee] text-slate-950 w-9 h-9 items-center justify-center shadow-lg font-black hover:scale-110">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                                <div class="relative group">
+                                    <div id="firsttime-slider"
+                                        class="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                                        <img src="./assets/ThinhPrj/hs/firsttime/1.jpg"
+                                            alt="[CHUYÊN MỤC: “ĐÓ LÀ LẦN ĐẦU…”]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%231'"
+                                            data-title="[CHUYÊN MỤC: “ĐÓ LÀ LẦN ĐẦU…”]" data-content="Chào cậu,
 
-                    <!-- 5. FINAL BOSS / MEMORY ARCHIVES (CONFESSIONS MASONRY GRID) -->
-                    <div class="space-y-6 pt-4">
-                        <div class="border-b-2 border-slate-700 pb-3 flex items-center justify-between">
+Có bao lần đầu ở Huỳnh mà cậu muốn nhớ?
+Có bao lần đầu ở Huỳnh mà cậu muốn gọi tên?
+
+Tại sao không kết những lần đầu ấy thành câu chữ để một ngày kia khi nhìn lại, ta sẽ hoài niệm về một giấc mơ ta đã từng có, về những người ta đã từng biết, về một ta với bao kỉ niệm trong quá khứ, không muốn quên?
+
+Hãy để Humada’s Stories với chuyên mục “Đó là lần đầu…” giữ lại những lần đầu tiên sâu sắc ở Huỳnh của cậu nhé!"
+                                            onclick="openHumadaModal(this)">
+                                        <img src="./assets/ThinhPrj/hs/firsttime/2.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU MÌNH GẶP CẬU]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%232'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH GẶP CẬU]"
+                                            data-content="Tại Huỳnh nơi tôi đã từng gặp cậu ấy, và vì cậu ấy tôi phải cố gắng quay lại..."
+                                            onclick="openHumadaModal(this)">
+                                        <img src="./assets/ThinhPrj/hs/firsttime/3.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU MÌNH ĐẾN KÝ TÚC XÁ]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH ĐẾN KÝ TÚC XÁ]" data-content="Ngày đầu đến ký túc xá sẽ có những thứ bạn chẳng ngờ?
+
+Không ngờ được rằng mình sẽ sống với những đứa &quot;tâm thần&quot; hợp cạ.
+
+Không ngờ được rằng sinh nhật mỗi năm sẽ ăn thêm chiếc bánh của bạn cùng phòng.
+
+Không ngờ được đêm đêm còn có thể nghe ban công ngoài kia có người đứng hát.
+
+Không ngờ có người thức tới ba giờ sáng chăm chỉ luyện đề bên phòng đọc.
+
+Cũng có ai ngờ được rằng, lần đầu đó chớp mắt một tích tắc đã xa phòng, xa bạn, xa ký túc xá đến mấy mùa thu."
+                                            onclick="openHumadaModal(this)">
+                                        <img src="./assets/ThinhPrj/hs/firsttime/4.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU MÌNH BƯỚC VÀO LỚP HỌC Ở HUỲNH]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH BƯỚC VÀO LỚP HỌC Ở HUỲNH]" data-content="Đã chính thức trở thành một phần nhỏ của nơi đây...
+
+Cảm giác lạ và khó tả lắm..
+Tôi biết đây sẽ là nơi chất chứa bao kỉ niệm đẹp nhất của cuộc đời mình. Phút chốc nghẹn..
+
+Một ngày nào đó chúng ta sẽ vẫy chào nhau và ước rằng mình không bao giờ phải nói lời tạm biệt.
+
+&quot;Thanh Xuân của tôi nằm lại nơi đây, trên chiếc ghế đó, ở chỗ ngồi đó, trong lớp học đó... và với những con người đó&quot;
+
+Cơn mưa năm ấy, chúng ta năm này
+Gió thoảng, mây bay..." onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/5.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU HỌC TĂNG TIẾT VÀO BUỔI TỐI]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU HỌC TĂNG TIẾT VÀO BUỔI TỐI]"
+                                            data-content="Mình chưa từng vào trường học vào buổi tối bao giờ, vậy mà đến cấp 3 lại được trải nghiệm cảm giác ấy.
+
+Khác với khung cảnh tấp nập sáng sớm, hay thưa dần vào buổi chiều, buổi tối ở Huỳnh yên tĩnh nhưng cũng mang một cảm giác đặc biệt lắm.
+
+Lần đầu lớp mình ngơ ngác, sợ hãi cùng nhau đi khắp trường để tìm lớp học.
+
+Lần đầu biết lo lắng sợ trễ giờ vào lớp khi đã quá giờ học nhưng vẫn không tìm được phòng, vừa có những tiếng la thất thanh, vừa cười thật to chỉ để không phải nghe những âm thanh của gió phớt ngang qua tai.
+
+Lần đầu thấy được khuôn mặt sợ hãi của những đứa tưởng chừng như mạnh mẽ vô cùng.
+
+Tuy sợ thật đó, nhưng mà vui vẻ nhiều hơn, dường như lúc đó những tiếng cười lấn át cả nỗi sợ bóng đêm rồi.
+
+Dù trước kia có hay than vãn về việc học vào ban đêm, nhưng giờ có muốn cũng chẳng thể nào có được những buổi học thú vị như thế nữa." onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/6.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU MÌNH THÍCH MỘT NGƯỜI]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH THÍCH MỘT NGƯỜI]"
+                                            data-content="Người đó sẽ không biết được rằng, ở trong từng cuộc hội thoại xung quanh mình, đều sẽ xuất hiện cái tên của bạn, không ít thì nhiều, không vô tình thì hữu ý."
+                                            onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/7.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU MÌNH THI CUỐI KÌ ONLINE]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH THI CUỐI KÌ ONLINE]"
+                                            data-content="Cuộc sống là một chuỗi dài của những cuộc thi, từ lúc sinh ra, cho đến khi đi làm, và cả những phút cuối đời. Thế nhưng, mình chưa bao giờ nghĩ sẽ có một ngày, mình sẽ tham gia vào cuộc thi trực tuyến. Thi mà, luôn có những lo lắng, và đặc biệt lại còn là lần đầu. Mình đã vô cùng bối rối, liệu nó có khó không?
+
+Thế nhưng mọi việc đều êm xuôi, và suôn sẻ, và để lại một trải nghiệm thú vị cho mình.
+
+Cuối cùng, mình muốn dành lời nhắn cho các bạn, những người đang dành thanh xuân đẹp đẽ của mình dưới mái trường Chuyên Huỳnh Mẫn Đạt, sẽ có một kì thi trực tuyến thật thành công, và gặt hái được thành tích cao, không chỉ trong học tập, và còn cả những cuộc thi sau này!"
+                                            onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/8.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU THỜI TIẾT TRONG TÔI TUYỆT ĐẸP ĐẾN THẾ!]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU THỜI TIẾT TRONG TÔI TUYỆT ĐẸP ĐẾN THẾ!]"
+                                            data-content="Cái nắng 38 độ C giờ ra về chứng kiến những ánh nhìn lén lút tớ quăng cho cậu.
+
+Cái giòn giã của mấy cơn mưa đầu mùa đọng lại trong những lần tớ ngắm mưa rồi nhớ cậu. Cái hanh khô của gió bấc làm dịu khuôn mặt đỏ bừng của tớ mỗi khi chạm mặt cậu.
+
+Ngày kia ngoảnh đầu lại dù tự nhủ là cảm xúc bồi hồi của thời trẻ nhưng ta luôn biết rằng tận đáy lòng ta đã sớm thuộc về nơi nào."
+                                            onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/9.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU MÌNH BIẾT CÓ MỘT TÌNH YÊU...]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH BIẾT CÓ MỘT TÌNH YÊU...]"
+                                            data-content="Đó là lần đầu mình biết có một tình yêu vừa ồn ào vừa lặng thầm đến thế. Đứng nhìn em bước từng bước ra về, bóng lưng cao to trông thật vững chãi. Năm cuối ở trường tựa như một giấc mơ."
+                                            onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/10.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU MÌNH ĐI THƯ VIỆN TRƯỜNG]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH ĐI THƯ VIỆN TRƯỜNG]" data-content="Không biết mọi người như thế nào, chứ suốt 4 năm học cấp 2 mình chưa từng đi vào thư viện trường hay nói đúng hơn là mình không biết nó nằm ở đâu, nhưng lên cấp 3 thì tự nhiên mình lại muốn đi thư viện thử cho biết.
+
+Ấn tượng đầu tiên là thư viện trường mình view đẹp thật sự, với xịn nữa. Mình hay xuống đó học bài lắm, lâu lâu nhà mình cúp điện mình cũng hay ghé qua thư viện để ké wifi nữa.
+
+Còn về phòng đọc thì nhiều sách hơn mình nghĩ nữa, nếu chịu khó “mò” thì cũng có vài cuốn hay lắm. Mình khuyên các bạn nên đọc “Nỗi buồn của chiến tranh nha”, hay lắm. Lâu lâu hên còn được ăn &quot;cẩu lương&quot; ở đó nữa.
+
+Còn mọi người thì sao? Thư viện trong mắt mọi người như thế nào?" onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/11.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU MÌNH XA HUỲNH?]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU MÌNH XA HUỲNH?]
+" data-content="Đại học đón mình bằng cái nóng Sài Gòn hơn 30 độ. Giữa muôn trùng tòa nhà, giữa muôn vàn khuôn mặt, chợt thấy xa Huỳnh quá, cũng nhớ, nhớ Huỳnh quá.
+
+Trước khi đi Sài Gòn mình cũng có ghé Huỳnh vài lần, như để Huỳnh nhung nhớ mình thêm một chút.
+
+Giờ xa Huỳnh thật rồi này, xa Rạch Giá thật rồi này. Mình sẽ nhớ trường lắm, nên là... Huỳnh đừng có quên mình đó nghen."
+                                            onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/12.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU TỚ TẬP QUÊN]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU TỚ TẬP QUÊN]" data-content="cảm ơn cậu vì đã đến làm bạn cùng tớ mấy tháng qua, cảm ơn cậu vì cho tớ cảm giác được ai đó quan tâm, cảm ơn cậu vì những lời chúc ngủ ngon mỗi tối,
+
+cũng cảm ơn cậu vì đã rời xa tớ một cách âm thầm như thế, để tớ biết là mọi thứ rồi sẽ không theo những gì tớ nghĩ.
+
+cảm ơn cậu lần cuối, nhé." onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/13.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU TÔI TRỘM THƯƠNG MỘT NGƯỜI]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU TÔI TRỘM THƯƠNG MỘT NGƯỜI]"
+                                            data-content="&quot;Huỳnh, ngày 17 tháng 9.
+
+Tiếng chuyện trò trong lớp học huyên náo hơn tất thảy mọi năm, cành cây ngoài cửa sổ lớp học đua nhau vươn mình, cơn gió chuyển mình xuyên qua từng tán lá, chúng ta khi đó, đúng thuở thiếu thời.
+
+Thiếu niên, khí khái hào sảng, theo đuổi tự do, chí hướng bốn phương. Dẫu cho học tập mệt mỏi, áp lực như núi, song, nhiệt huyết của chúng ta vẫn rực rỡ như Hướng Dương đuổi theo ánh mặt trời, có thể từ trong mặt đất cằn cỗi mà nở rộ, từ trong bụi gai mà toả hương thơm ngát.
+
+Tuy hiện tại chúng ta cái gì cũng không có, nhưng nắm trong tay cả một thanh xuân. Cũng vừa vặn là lần đầu tiên nắm trong tay một vài những rung cảm thầm lặng.
+
+Có thể là một cái chạm mắt của cậu bạn học, là một cái tên viết nhiều lần trên trang giấy nháp, là bóng lưng quá đỗi quen thuộc mỗi khi vụng trộm liếc mắt.
+
+Vụng về lưu giữ hình ảnh của cậu ấy, tất cả những việc cậu ấy có hứng thú, chính mình đều đã thử làm qua. Dẫu thích cậu ấy hơn những gì thể hiện ra, nhưng lại giấu đi không nói. Vừa sợ cậu ấy biết được, lại hy vọng cậu ấy sẽ biết được.
+
+&quot;&quot;Nhưng thật đáng tiếc là tất cả thanh xuân của cậu đều không liên quan đến tớ, còn tất thảy thanh xuân của tớ chỉ có mình cậu&quot;&quot;.&quot;"
+                                            onclick="openHumadaModal(this)">
+
+                                        <img src="./assets/ThinhPrj/hs/firsttime/14.jpg"
+                                            alt="[ĐÓ LÀ LẦN ĐẦU, BẦU TRỜI TRONG TÔI ĐẸP ĐẾN VẬY]"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            onerror="this.src='https://placehold.co/400x400/faf9f6/ff5252?text=Lần+Đầu+%233'"
+                                            data-title="[ĐÓ LÀ LẦN ĐẦU, BẦU TRỜI TRONG TÔI ĐẸP ĐẾN VẬY]" data-content="Đẹp làm sao khi bầu trời đang chạng vạng núp bóng ánh tà buổi chiều thu. Ngày thứ bảy hôm ấy, Huỳnh như bừng sáng, không phải vì ánh đèn điện heo hút mà là tiếng hò reo trong sân bóng, tiếng cổ vũ hân hoan của bạn học, tiếng reo vang mỗi cú sút ghi bàn, và là tiếng cười phấn khích khi giành được thắng lợi.
+
+Đẹp là khi cả bọn cùng háo hức theo dõi những người hùng chạy vụt trong sân đấu. Đẹp là khi bảng tỉ số bóng chuyền của đội nhà tăng vọt không ngừng.
+
+Đẹp còn là nước mắt của sự nuối tiếc, là lời động viên cùng nhau vượt qua. Các chiến binh của tớ ạ! Các cậu làm rất tốt, rất tốt rồi, chỉ là thiếu 1 chút may mắn nữa thôi.
+
+Hội thao trường mình tuyệt thật, các cậu nhỉ?" onclick="openHumadaModal(this)">
+                                    </div>
+                                    <button type="button" onclick="scrollThumbSlider('firsttime-slider', -280)"
+                                        class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1/2 -left-4 -translate-y-1/2 z-10 rounded-full bg-[#ff5252]/90 text-white w-10 h-10 items-center justify-center shadow-lg hover:bg-[#a02121]">
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                    </button>
+                                    <button type="button" onclick="scrollThumbSlider('firsttime-slider', 280)"
+                                        class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1/2 -right-4 -translate-y-1/2 z-10 rounded-full bg-[#ff5252]/90 text-white w-10 h-10 items-center justify-center shadow-lg hover:bg-[#a02121]">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="humada-slider-section mb-12">
+                                <div class="flex flex-col gap-4 mb-8">
+                                    <h3 class="text-2xl md:text-3xl font-black text-[#ff5252] uppercase">Những bước chân
+                                        cuối cùng</h3>
+                                    <p class="text-sm text-gray-500 max-w-3xl">Click on a photo to read the full story.
+                                        <br>Below is a selection of highlights — the full collection is available in the
+                                        album.
+                                        <br>
+                                        <a href="https://www.facebook.com/media/set/?vanity=humadastories&set=a.154700419474893"
+                                            target="_blank" rel="noopener noreferrer">
+                                            <span class="text-[#ff5252] hover:underline">View the full photo album on
+                                                Facebook</span>
+                                        </a>
+                                    </p>
+                                </div>
+
+                                <!-- Slide ảnh ngang, cuộn được. Click vào ảnh sẽ mở modal kiểu bài viết Facebook -->
+                                <div class="relative group">
+                                    <div id="laststeps-slider"
+                                        class="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                                        <img src="./assets/ThinhPrj/hs/story1.jpg" alt="Bước chân đầu tiên"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            data-title="Vài lời nhắn gửi thanh xuân..." data-content="À thì ra lời nói :&quot;Ba năm thật ngắn...!&quot; ấy của cô chủ nhiệm chẳng phải là lời răn dạy hay nói quá, mà nó là thật. Ba năm chớp mắt một cái thì đã trôi qua trong thoáng chốc. Mình ở đấy bất lực nhìn thời gian trôi, nhìn những kỉ niệm ít dần so với chồng bài tập, những người chợt đến rồi vội cất bước rời đi,...Ba năm chơi vơi đọng lại trong mình biết bao khoảng trống.
+
+Vốn là lời nuối tiếc ngậm ngùi gửi đến thanh xuân, phải chi với những ngày của một cô nhóc vô tư vô lo mình biết mở lòng ra, mở rộng tầm nhìn để tận hưởng thanh xuân, thì bây giờ đây mình đâu có trông về nó bằng cái nhìn nuối tiếc nữa.
+
+Bởi đấy, chị muốn gửi đến các em lớp dưới vài lời, nếu các em còn cơ hội, còn thời gian, còn sức chơi thì hãy tận hưởng trọn vẹn thanh xuân của mình, đừng để nó trôi qua một cách vô nghĩa, các em nhé!
+
+Gửi ở đây, những bước chân cuối cùng.
+Chuyên XX K28." onclick="openHumadaModal(this)">
+                                        <img src="./assets/ThinhPrj/hs/story2.jpg" alt="Lời tạm biệt cuối cùng"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            data-title="Lời tạm biệt cuối cùng" data-content="3 năm thật sự rất ngắn ngủi, trong 3 năm ấy tôi đã có những chuyến đi chơi xa cùng bạn bè, những áp lực vào mùa thi cử, và quan trọng hơn hết tôi đã gặp được cậu. Tuy chỉ gặp được cậu vào khoảng thời gian cuối cấp nhưng đó lại thật sự là điều rất tuyệt vời. Cấp 3 không dài đâu, nó nhanh lắm đấy, hãy tận hưởng khoảng thời gian ấy một cách trọn vẹn nhất. Đừng để nó trôi qua một cách vô nghĩa để sau này khi nhìn lại, bạn chỉ có thể tiếc nuối &quot;tại sao mình lại không trân quý khoảng thời gian ấy hơn nhỉ?&quot;. Đừng để những hiểu lầm nho nhỏ, những điểm số không được như ý mà phá hủy đi khoảng thời gian đẹp nhất trong cuộc đời học sinh. Có thể những con điểm tốt, những lời khen bạn sẽ thích nhưng thứ bạn nhớ nhất lại là những lần điểm kém, những lần bị thầy cô nhắc nhở. Hãy tạo cho mình một khoảng trời thật đẹp ở đây nhé, để khi về lại bạn sẽ tự hào vì mình đã từng là học sinh dưới mái trường Huỳnh này ~
+
+Chúc các bạn k12 sẽ có một kì thi thật tốt, cùng nhau cố lên nhé ❤" onclick="openHumadaModal(this)">
+                                        <img src="./assets/ThinhPrj/hs/story3.jpg" alt="Những bước chân cuối cùng"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            data-title="Những bước chân cuối cùng"
+                                            data-content="Nhớ hồi trước mới vào lớp 10 mình hay đá cầu lắm, cứ chiều chiều là lại vào trường chơi, sẽ có sẵn một tụ đá cầu ở đó chờ mình, hoặc đôi khi mình là người đến đợi trước. Ngày ngày đều vậy, như một điều hiển nhiên khó đổi thay, cùng với những khuôn mặt trước lạ, sau quen, những niềm vui bé nhỏ khi cùng đứng thành một vòng tròn đá trái cầu bay qua bay lại. Thật tuyệt khi gặp được anh chị, những người góp phần nâng đỡ những bước chân của mình ở Huỳnh. Niềm vui cũng là mỗi khi mệt mỏi, tất cả lại ngồi tụ trước sảnh B rồi kể nhau về mọi thứ trên đời.
+
+Nhưng rồi, chuyện cũng sẽ qua khi mọi người đều tất bật với các kì thi, chúng ta không gặp nhau nhiều nữa, rồi các anh chị cũng đã ra trường, mình cũng dần từ bỏ thói quen mỗi chiều đến trường để tận hưởng cái nhộn nhịp của tiếng bóng chuyền, tiếng trống tan học lúc 4h30, và cả tiếng trò chuyện của mọi người, hay dù mình có vào thì cũng chẳng còn đây những người đợi mình và nói &quot;Vô đá cầu nè&quot; nữa.
+
+Giờ thì cũng là những ngày cuối cấp của mình ở đây, và mình cũng rời xa mọi người như lúc trước. Chắc là ai cũng sẽ có câu chuyện của riêng mình, và ở đâu đó cũng sẽ có người tiếc nuối sự chia ly những người mà mình đã từng thân thiết bấy lâu."
+                                            onclick="openHumadaModal(this)">
+                                        <img src="./assets/ThinhPrj/hs/story4.jpg" alt="Những bước chân cuối cùng"
+                                            class="flex-none w-56 h-56 md:w-64 md:h-64 rounded-xl object-cover shadow-md border border-gray-800/40 snap-start cursor-pointer hover:opacity-90 hover:scale-105 transition-all duration-300"
+                                            data-title="Giá mà ngày mai tỉnh dậy..." data-content="Bài thi môn tiếng Anh đã được hoàn thành tương đối, còn 30p nữa mới ra về. Với một đứa không khá khẩm gì với môn học này, tôi vẫn khá tự tin là mình đã làm tốt.
+
+Chút ít thời gian để mình có thể nhìn ngắm căn phòng này. Chà, ngày cuối rồi.
+
+Cấp ba đi qua để lại cho mình một khoảng trời thanh xuân vô cùng đáng nhớ, tuy đôi lúc lại nằng nặc muốn quên đi. Nó mang đến một vài người bạn mà suốt đời không thể thay thế được, một vài người giáo viên mà tôi coi là mình mắc nợ họ cả nghĩa, cả tình.
+
+Bắt đầu gục khóc trên đề thi, chỉ còn vài phút cuối cùng là kết thúc. Chẳng là bao lâu nữa, kim đồng hồ của tôi cứ thế mà chạy, và tôi không thể đủ nhanh để bắt kịp nó. Một giây tới, một tiếng cười hiện ra trong tâm trí. Một giây qua, một giọt nước mắt từ ngày xưa rơi ra khỏi tâm hồn.
+
+Tôi nhớ lại những lời dạy của một người cô đáng kính &quot;Cố gắng hết sức mình, đừng để sau này phải nói mấy câu 'giá mà, phải chi, ước gì'&quot;. Vâng, em đã sống hết mình cho cấp ba, em không có gì hối hận sau những tháng năm trọn vẹn tuyệt vời đó. Tuy nhiên, một lần duy nhất này em xin được cãi lời.
+
+Giá mà ngày mai tỉnh dậy, sẽ là ngày đầu tiên em bước tới nơi đây.
+
+Hồi trống dài điểm 15 giờ 30 phút,
+Trường Trung học phổ thông Chuyên Huỳnh Mẫn Đạt,
+Ngày 10, tháng 8, năm 2020,
+
+Cảm ơn vì đã đưa tôi đến tận đây." onclick="openHumadaModal(this)">
+
+                                    </div>
+                                    <button type="button" onclick="scrollThumbSlider('laststeps-slider', -280)"
+                                        class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1/2 -left-4 -translate-y-1/2 z-10 rounded-full bg-slate-900/80 border border-white/10 text-white w-10 h-10 items-center justify-center shadow-lg hover:bg-slate-800">
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                    </button>
+                                    <button type="button" onclick="scrollThumbSlider('laststeps-slider', 280)"
+                                        class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1/2 -right-4 -translate-y-1/2 z-10 rounded-full bg-slate-900/80 border border-white/10 text-white w-10 h-10 items-center justify-center shadow-lg hover:bg-slate-800">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 5. Humada's Story (Confessions Grid - Dynamic Masonry Layout) -->
                             <div>
-                                <span
-                                    class="text-[10px] bg-amber-400/20 text-amber-300 border border-amber-400/50 px-2 py-0.5 rounded font-mono">MEMORY
-                                    ARCHIVES</span>
-                                <h2 class="text-xl md:text-3xl font-black text-white tracking-widest uppercase mt-1">
-                                    HUMADA'S STORY LOGS</h2>
+                                <h2 class="text-2xl md:text-3xl font-black text-[#e85d75] uppercase mb-2">Humada's Story
+                                </h2>
+                                <p class="text-sm text-gray-600 mb-8 italic">Click on a photo to read the full story.</p>
+                                <!-- Masonry Grid cho các thẻ vàng (bố cục scrapbook, so le + nghiêng nhẹ) -->
+                                <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+
+                                    <!-- Card 1: HẠ CUỐI -->
+                                    <div
+                                        class="break-inside-avoid transform rotate-[-1.5deg] hover:rotate-0 hover:scale-[1.03] transition-transform duration-300">
+                                        <img src="./assets/ThinhPrj/hs/content/1.jpg" alt="[CHỈ CHÚNG TA HIỂU NHAU]"
+                                            class="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-[#f5e6b3] cursor-pointer"
+                                            onerror="this.src='https://placehold.co/400x300/fdfaf2/ff5252?text=Hạ+Cuối'"
+                                            data-title="[CHỈ CHÚNG TA HIỂU NHAU]" data-content="Có những mối quan hệ không tên ở trên đời. Không phải vì tôi đơn phương, không phải vì anh muốn đùa giỡn, cũng không phải vì chúng tôi muốn mập mờ.
+Mà là chúng tôi sợ...
+
+Gặp nhau vào một ngày hạ nắng đẹp. Anh vừa kịp quên người cũ, nỗi đau trong lòng tôi cũng đã vơi đi phần nhiều. Bằng những nỗi buồn mà chúng tôi ở cạnh nhau, sẻ chia và lắng nghe nhau. Chúng tôi không vội vã lao vào nhau mà rất chậm để hiểu nhau, thật sự rất chậm! Khoảng thời gian ngắn ngủi đó, anh quay cuồng với tài liệu thi cử, tôi vùi đầu với vô vàn deadline, vậy mà chúng tôi vẫn vô cùng hạnh phúc khi ở cạnh nhau. Không tình tứ, không ngân vang, giống như những người bạn, những người anh em luôn xuất hiện khi đối phương cần, động viên nhau cố gắng. Mọi người nhìn vào rất muốn chúc phúc cho chúng tôi, người cũ cũng bắt đầu lời ra tiếng vào về mối quan hệ này. Duy nhất chỉ có chúng tôi biết, chúng tôi không thể tiến xa hơn. Cả hai đều đặt ra rất nhiều lý do để giải thích, đó là khoảng cách địa lí, là tôi quá trẻ con, là suy nghĩ của tôi còn non dại, là anh quá trưởng thành, là anh quá khắt khe với tôi...
+
+Nhưng chỉ có bản thân chúng tôi hiểu, vì chúng tôi hợp nhau ở mọi mặt, vì cả hai đều đã trải qua những lần chia ly rất đau lòng, nên chúng tôi sợ, sợ chuyện cũ sẽ lặp lại một lần nữa.
+
+Chúng tôi sợ nếu một trong hai mở lời bắt đầu mối quan hệ mới, thì một trong hai phải mở lời để kết thúc mối quan hệ đó.
+
+Sợ nếu tiến thêm bước nữa, thì sẽ đánh mất nhau!
+
+Bạn có bao giờ sợ đánh mất một mối quan hệ nào chưa?
+
+~~~~~~~~~~~~~~~~~~~~~
+
+Bước vào một mối quan hệ không tên, là ta đã chấp nhận bên nhau như hai đường thẳng song song, không có điểm giao cắt, chỉ có thể lặng lẽ, bình thản bước cạnh bên. Yêu thương chẳng được, ghen tuông hay hờn dỗi cũng chẳng xong, một mối quan hệ chẳng thể đường đường chính chính. Nhưng bỏ thì thương, vương thì tội, đành ôm trong mình những câu hỏi đến ngày sau, ta và người rốt cuộc là cái gì? Thì thôi, chẳng muốn biết.
+
+Chỉ biết là, khi đã bước vào một không gian với vô vàn ranh giới. Ta và người, ai bước qua giới hạn kia trước, kẻ đó thua.
+" onclick="openHumadaModal(this)">
+                                    </div>
+
+                                    <!-- Card 2: CHỈ CHÚNG TA -->
+                                    <div
+                                        class="break-inside-avoid transform rotate-[1deg] sm:mt-8 hover:rotate-0 hover:scale-[1.03] transition-transform duration-300">
+                                        <img src="./assets/ThinhPrj/hs/content/2.jpg" alt="[HẠ CUỐI]"
+                                            class="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-[#f5e6b3] cursor-pointer"
+                                            onerror="this.src='https://placehold.co/400x400/fdfaf2/ff5252?text=Chỉ+Chúng+Ta'"
+                                            data-title="[HẠ CUỐI]" data-content="Đối với tôi mùa hạ là mùa buồn nhất của năm. Biết bao cuộc chia ly mang bao nỗi sầu vấn vương trong con tim cuồn cuộn mầm máu này. Bạn bè, thầy cô, người yêu... tất cả tất cả dần tiêu biến à không dần đi xa, đi vào quá khứ. Như cánh hoa phượng vậy đã lìa cành thì không thể nào quay lại, con người cũng vậy.
+
+Một khi đã bay vào khoảng không của bầu trời chìm đắm trong cơn mộng mị của cuộc đời thì có còn nhớ khoảng thời gian trước đây không? Hôm nay sẽ trở thành quá khứ của ngày mai nhưng mỗi quá khứ đều mang một vẻ đẹp khó nói cũng khó quên.
+
+~~~~~~~~~~~~~~~~~~~~~~
+
+Đâu ai cản nổi bước đi của thời gian, đâu ai ngăn được hạ kia dừng lại mãi. Lòng này vẫn nuối tiếc khôn nguôi một mùa hạ đã qua, và một mùa hạ sắp qua. Biết là hạ cuối, nhưng chẳng thể dối lòng vì đã thương hạ, nuối hạ và muốn níu hạ. Ngậm ngùi, bất lực nhìn hạ bước ngang qua đời ta thoáng chốc, lặng đáy lòng chấp nhận đau thương.
+
+Dẫu thế nào, ta vẫn muốn gửi đến mùa hạ hôm nay vài lời thương nhớ:
+
+&quot;Này hạ cuối, ta sẽ nhớ người!&quot;" onclick="openHumadaModal(this)">
+                                    </div>
+
+                                    <!-- Card 3: GỬI EM -->
+                                    <div
+                                        class="break-inside-avoid transform rotate-[-2deg] lg:mt-16 hover:rotate-0 hover:scale-[1.03] transition-transform duration-300">
+                                        <img src="./assets/ThinhPrj/hs/content/3.jpg" alt="[VỀ ĐÂU GIỮA LỐI TƯƠNG TƯ]"
+                                            class="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-[#f5e6b3] cursor-pointer"
+                                            onerror="this.src='https://placehold.co/400x350/fdfaf2/ff5252?text=Gửi+Em...'"
+                                            data-title="[VỀ ĐÂU GIỮA LỐI TƯƠNG TƯ]" data-content="Chưa bao giờ, mình lại thấy sợ thích một người đến thế.
+
+Dường như khi người ta dần bị mất đi cảm giác an toàn, bị tổn thương quá nhiều, sợ hãi với tình yêu lúc trước,... thì người ta sẽ sợ phải thích, phải yêu, phải thương một người. Chẳng có chuyện tình nào làm em không rơi nước mắt cả, nên em sợ lắm.
+
+Đêm qua em sợ, hôm nay em sợ, sợ cái khoảnh khắc đó làm em thích anh mất rồi...
+Nhưng em sẽ không nói ra lòng mình đâu, em sẽ để nó ở đó, bởi cái thứ này nếu tồn tại sẽ làm chúng ta mất đi những gì chân thành và tự nhiên nhất.
+
+Cả, em biết mà, anh sẽ chẳng thích em đâu.
+
+~~~~~~~~~~~~~~~~~~~~~~
+
+Yêu đơn phương, giống như đứng ở ngã ba với tín hiệu đèn vàng. Tiến thì sợ người ấy bật đèn đỏ, lùi thì sợ mình bỏ lỡ đèn xanh.
+
+Nếu không muốn nói ra tình cảm đang giấu kín nơi con tim đang tuôn chảy những mầm máu thì hãy chôn sâu nó trong lòng đất hay để những cánh chim mang đi về phương trời xa... Dù thế nào thì những niềm vui , hạnh phúc mới là quan trọng nhất. Không cưỡng cầu ép buộc nhưng cũng có lúc phải mở cánh cửa trái tim chào đón thế giới mới đang đợi cậu! Hãy thử mở lòng ra đi nào, biết đâu lại thấy cả bầu trời xanh đang đứng đợi cậu ở trước mắt kia.
+" onclick="openHumadaModal(this)">
+                                    </div>
+
+                                    <!-- Card 4: BƠ VƠ -->
+                                    <div
+                                        class="break-inside-avoid transform rotate-[1.5deg] mt-4 hover:rotate-0 hover:scale-[1.03] transition-transform duration-300">
+                                        <img src="./assets/ThinhPrj/hs/content/4.jpg" alt="[TUỔI TRẺ CHẲNG ĐẾN LẦN HAI]"
+                                            class="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-[#f5e6b3] cursor-pointer"
+                                            onerror="this.src='https://placehold.co/400x500/fdfaf2/ff5252?text=Bơ+Vơ'"
+                                            data-title="[TUỔI TRẺ CHẲNG ĐẾN LẦN HAI]"
+                                            data-content="Ba năm thoáng chốc đã trôi qua... Đứng ở đây, trước cửa lớp, nhìn trọn vẹn từng góc lạ mà quen, từng cái bàn rồi tới cả bảng đen, nhìn từng khuôn mặt của những người mình đã gắn bó bao năm, tưởng đáng ghét ấy mà sao giờ nhìn lại thấy chúng nó dễ thương đến lạ,... Hình như, tới lúc người ta sắp mất đi thứ gì rồi thì người ta mới biết thế nào là trân trọng. Tiết học cuối cùng trong tôi là những hỗn độn, vui có buồn có, hân hoan có tiếc nuối có. Mấy ai trong đời có hai lần tuổi trẻ, nói quên cái một đâu phải chuyện dễ làm. Chỉ mong, trên đại lộ danh vọng với bao phận đời đó, khi ngoảnh lại, chúng ta vẫn nhận ra nhau, chỉ đơn giản một cái gật đầu, cái bắt tay hồ hởi cũng cho ta nhớ về một khoảng trời ký ức ta từng có. Và cả, mong rằng những người bạn của tôi và cả những người tôi đã từng ghét, những người sắp phải trải qua kì thi quan trọng nhất đời người,... Cố lên nào, khi bạn đã nỗ lực hết mình, bạn sẽ làm được!
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Cơn gió mát lành của tuổi trẻ chợt cuốn trôi bao năm tháng, để rồi khi chiều tà, ngoảnh lại chỉ còn một vùng ký ức với bao tiếc nuối khôn nguôi. Được gặp nhau cơ hồ cũng là do sợi tơ duyên nào đó đã gắn nối nhau từ may mảy kiếp nào. Xa nhau, mỗi người trong chúng ta rồi sẽ bay cao bay xa về một vùng trời mới, một vùng trời kín khuất riêng tây. Liệu rằng khi gặp lại nhau ở một khắc nào đó của cuộc đời, chúng ta vẫn sẽ cùng nhau ôn lại những ký ức thanh xuân, nở với nhau nụ cười thiếu niên trọn vẹn?"
+                                            onclick="openHumadaModal(this)">
+                                    </div>
+
+                                    <!-- Card 5: TUỔI TRẺ -->
+                                    <div
+                                        class="break-inside-avoid transform rotate-[-1deg] sm:-mt-6 hover:rotate-0 hover:scale-[1.03] transition-transform duration-300">
+                                        <img src="./assets/ThinhPrj/hs/content/5.jpg" alt="[DANG DỞ MỘT ƯỚC MƠ]"
+                                            class="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-[#f5e6b3] cursor-pointer"
+                                            onerror="this.src='https://placehold.co/400x450/fdfaf2/ff5252?text=Tuổi+Trẻ'"
+                                            data-title="[DANG DỞ MỘT ƯỚC MƠ]" data-content="Đậu ĐH Y TPHCM, một ước mơ dang dở đã rất lâu của ba. Giờ mình phải viết tiếp nó, một cách bất lực. Hôm qua thi xong, ra khỏi phòng thi thì biết bao cảm xúc chợt ùa về. Mình làm bài không được, nguyện vọng 1 đã vuột khỏi tầm tay mình dù mình đã cố gắng hết sức. Mình phải làm sao đây, mình thật vô dụng, mình có lỗi với ba với mẹ, với gia đình. 12 năm ăn học để vẽ tiếp bức tranh của ba, nhưng giờ mình lại làm hỏng nó mất. Mình phải làm sao đây, ước mơ của mình là gì, rồi ai vẽ nên ước mơ của mình đây? Ước mơ của ba, rồi làm sao mình có thể vẽ tiếp?...
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Khi ước mơ này chênh vênh giữa đôi bờ bế tắc và tuyệt vọng, bạn vẫn có thể viết lên ước mơ mới bằng tất cả sự nỗ lực và quyết tâm của mình. Hãy giữ cho bản thân một ý chí vững chắc, một nghị lực kiên cường, đừng để thất bại định hình bạn, bạn hãy từ thất bại đấy mà đứng lên.
+
+Bạn có thấy ngôi sao trên bầu trời ấy không? Ngôi sao cũng tựa như ước mơ mà ta đang mang, chúng tỏa sáng mãi mãi, nhưng thực chất chúng chỉ trọn vẹn là chúng khi bầu trời buông xuống màn đêm. Mơ ước về một cái gì đó thì dễ nhưng thực hiện lại khó khăn vô cùng, nhưng xem nào, giấc mơ có được khi chúng ta rơi vào giấc ngủ, còn ước mơ có được chỉ khi chúng ta một mực tin tưởng vào chính bản thân mình.
+
+Cố lên nhé! Chúc bạn may mắn." onclick="openHumadaModal(this)">
+                                    </div>
+
+                                    <!-- Card 6: VỀ ĐÂU -->
+                                    <div
+                                        class="break-inside-avoid transform rotate-[2deg] mt-10 hover:rotate-0 hover:scale-[1.03] transition-transform duration-300">
+                                        <img src="./assets/ThinhPrj/hs/content/6.jpg" alt="[NHỮNG ĐIỀU CON MUỐN NÓI]"
+                                            class="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-[#f5e6b3] cursor-pointer"
+                                            onerror="this.src='https://placehold.co/400x380/fdfaf2/ff5252?text=Về+Đâu'"
+                                            data-title="[NHỮNG ĐIỀU CON MUỐN NÓI]" data-content="Hình như ai cũng làm bài được hết ấy, chỉ mỗi con là không, mẹ ạ! Sáng thức dậy nhìn căn phòng bốn góc ngổn ngang tập sách này, tự nhiên con bất lực lắm luôn. Rồi con nhận được tin nhắn của mẹ: &quot;Thi tot nhe con gai iu cua me ❤&quot;, con khóc mẹ ạ. Kì thi này quan trọng với con quá, với nhà mình nữa, một mình mẹ nuôi con khôn lớn, giờ phải trông vào con rồi. Nhưng con làm bài không tốt mẹ ạ, hình như mẹ biết hay sao ấy, ra khỏi phòng thi môn cuối, con lại thấy tin nhắn của mẹ: &quot; Thi sao cung duoc het, me doi con ve.&quot; Mẹ đợi con nhé, con dọn phòng về ngay với mẹ đây!
+
+Viết ra những dòng này là để thỏa những áp lực đã đè nặng trên vai mình mấy tháng nay, mình muốn cảm ơn nơi này để mình có thể nói ra lòng mình. Nhưng mình biết nói yêu mẹ ở đây mẹ cũng chẳng đọc được, nên mình sẽ về ngay, ôm mẹ và nói lời yêu với người phụ nữ tuyệt nhất trần đời này!
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Thế giới có thể quay lưng với bạn, nhưng mẹ thì không.
+Thế giới nói lời cay nghiệt, mẹ chẳng tiếc thay lời nói ngọt ngào.
+Thế giới làm bạn buồn đau, mẹ ở bên bạn khi bạn đớn đau cùng cực.
+Có mẹ, được mẹ yêu thương, những buồn vui ngày ấy, liệu có thể làm trái tim ta thương tổn?"
+                                            onclick="openHumadaModal(this)">
+                                    </div>
+
+                                    <div
+                                        class="break-inside-avoid transform rotate-[-1deg] mt-6 hover:rotate-0 hover:scale-[1.03] transition-transform duration-300">
+                                        <img src="./assets/ThinhPrj/hs/content/7.jpg" alt="[KHÚC GIAO MÙA]"
+                                            class="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-[#f5e6b3] cursor-pointer"
+                                            onerror="this.src='https://placehold.co/400x300/fdfaf2/ff5252?text=Chỉ+Chúng+Ta'"
+                                            data-title="[KHÚC GIAO MÙA]" data-content="Hạ bước ngang qua đời ta mang bao cái nắng chói chang cùng những cơn mưa tầm tã. Thu nhẹ nhàng đến bên lại gây bao thương nhớ, vấn vương...
+
+Em tự hỏi mưa hạ với mưa thu có bao nhiêu điểm khác? Không hiểu sao nhưng mưa ngày hạ không làm lòng em thôi oi bức, nó đem lại cho em cái bức bối khó chịu chẳng thể giải thích bằng lời. Hình như sau cái oi nồng của những trận nắng gây choáng váng cả tâm hồn, cơn mưa ngày hạ chẳng thể làm dịu lại một trái tim đang khô cằn, nứt nẻ.
+
+Mùa thu đến với em lại đem cho em những xúc cảm khác, nắng thu ấm nhẹ nhàng, gió thu lại gợi buồn man mác, mưa thu cuốn đi bao dư âm ngột ngạt, oi ả của một bóng dáng hạ. Thu trả cho em cái nhè nhẹ dìu dịu nơi tâm hồn, thổi mát lòng em bằng khúc giao mùa đầy nhịp điệu, thu đến nhẹ nhàng nhưng làm trái tim em mơn man, vương vấn với bao xao động.
+
+Khúc giao mùa mà thu tấu lên nối tiếp những giai điệu mà một hạ đã cất lời, liệu có làm lòng ai nhớ thương, xao xuyến?
+
+~~~~~~~~~~~~~~~
+
+Trọn vẹn một bản hòa tấu giữa mùa xuân và mùa hạ, lại lặng lòng để lắng nghe những âm vang của khúc giao mùa hạ và thu.
+
+Để tâm hồn mê man, mơ mộng theo những giai điệu diệu kì mà thiêu nhiên đem lại, hỏi sống có còn gì nuối tiếc?"
+                                            onclick="openHumadaModal(this)">
+                                    </div>
+
+                                    <div
+                                        class="break-inside-avoid transform rotate-[1.5deg] sm:-mt-4 hover:rotate-0 hover:scale-[1.03] transition-transform duration-300">
+                                        <img src="./assets/ThinhPrj/hs/content/8.jpg"
+                                            alt="[KHÚC TÌNH SI ANH VIẾT NGÀY EM ĐI]"
+                                            class="w-full rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-[#f5e6b3] cursor-pointer"
+                                            onerror="this.src='https://placehold.co/400x300/fdfaf2/ff5252?text=Chỉ+Chúng+Ta'"
+                                            data-title="[KHÚC TÌNH SI ANH VIẾT NGÀY EM ĐI]" data-content="&quot;Sắc thiên thanh chờ ngày mưa phùn, còn ta chờ đợi người.&quot;
+
+Hôm nay trời đẹp quá này, ước chi có một lần được chở em dạo một vòng Rạch Giá. Anh sẽ kể cho em nghe về chuyện con đường này ngày nào anh cũng đi qua, bầu trời hôm nào cũng đẹp như vậy, tiếc thay mọi thứ lại không được hoàn hảo vì thiếu đi em.
+
+Có một ngày thấy hiện lên vài dòng tin nhắn, người ta bảo với anh em không còn hạnh phúc. Tưởng chừng anh sẽ vui lắm ấy, nói ra thì quá là ích kỷ nhưng mà sự thật là anh không đủ cao thượng để chúc phúc cho em. Làm sao đây khi một ngày người ta bỏ lại hết những chân thành, những cố gắng, những hy vọng của mình rồi quay mặt bước đi như chưa từng quen biết, đến cái ngoái đầu nhìn lại cũng không có.
+
+Ừ thì anh muốn giữ em là của riêng mình, anh không cam tâm, nhưng sự thật thì vẫn mãi là sự thật dù cho nó có đau lòng đến như thế nào. Mặc dù có thể nói đây là điều anh chờ đợi bao nhiêu lâu nay, nhưng bây giờ anh biết, dù trời có mưa hay nắng, anh cũng không thể chạy đến đứng cạnh em thêm một lần nào nữa.
+
+Có hay không một kỳ tích xảy ra? Câu trả lời cho chuyện chúng mình mãi mãi là không em nhỉ. Dù anh có chờ 1 năm, 5 năm, 10 năm hay 20 năm đi chăng nữa thì câu trả lời cũng không thay đổi. Em này, thật ra là anh có chờ đấy, nhưng không phải chờ em quay về mà là chờ ngày anh quên được em. Thôi thì nếu yêu thương phai cạn, tình cảm nhạt nhòa thì những câu chuyện hai đứa từng vẽ nên, anh xin giữ lại một phần cho riêng mình.
+
+Chúng ta còn nợ nhau một giấc mơ chung, anh sẽ hoàn thành nốt phần của mình, anh mong em cũng vậy.
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Đến cuối cùng thì cũng chẳng ai cắt nghĩa được tình yêu. Ai kia ngỡ quay lưng lại ôm một chút tình vương vấn, ai kia ngỡ trước mặt mà lại cách cả cõi lòng. Vốn chẳng sợ bước đi của thời gian, duy chỉ sợ ngày lòng người xoay chuyển. Vốn chẳng sợ dành một đời chờ đợi, duy chỉ sợ từng ngày ôm mỗi chút đắng cay.
+
+Nay chúng ta xa, có hay không chính là ý trời muốn ta phải nhớ về nhau mãi mãi?
+
+Bởi chăng, tình càng đau... thì càng đậm, tình càng đắng... sẽ càng sâu?
+" onclick="openHumadaModal(this)">
+                                    </div>
+
+
+
+                                </div>
+
                             </div>
-                            <span class="text-xs text-amber-400 animate-pulse hidden sm:inline">★ CONFESSION LOGS LOADED
-                                ★</span>
+
                         </div>
 
-                        <!-- Lưới Masonry phong cách Retro Cards -->
-                        <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 font-sans">
-
-                            <!-- Card 1 -->
-                            <div class="break-inside-avoid bg-slate-900 border-2 border-slate-700 hover:border-amber-400 rounded p-3 shadow transition-all duration-300 group cursor-pointer"
-                                onclick="openHumadaModal(this.querySelector('img'))">
-                                <div class="overflow-hidden rounded border border-slate-800 mb-3">
-                                    <img src="./assets/ThinhPrj/hs/content/1.jpg" alt="[CHỈ CHÚNG TA HIỂU NHAU]"
-                                        class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
-                                        onerror="this.src='https://placehold.co/400x300/0f172a/fbbf24?text=Memory+01'"
-                                        data-title="[CHỈ CHÚNG TA HIỂU NHAU]"
-                                        data-content="Có những mối quan hệ không tên ở trên đời... Gặp nhau vào một ngày hạ nắng đẹp. Bằng những nỗi buồn mà chúng tôi ở cạnh nhau, sẻ chia và lắng nghe nhau.&#10;&#10;Duy nhất chỉ có chúng tôi biết, chúng tôi không thể tiến xa hơn. Cả hai đều đặt ra rất nhiều lý do... Nhưng chỉ có bản thân chúng tôi hiểu, vì chúng tôi hợp nhau ở mọi mặt, nên chúng tôi sợ, sợ chuyện cũ sẽ lặp lại một lần nữa. Sợ nếu tiến thêm bước nữa, thì sẽ đánh mất nhau!">
-                                </div>
-                                <div
-                                    class="font-mono text-xs font-bold text-amber-300 flex items-center justify-between">
-                                    <span>#LOG_01: HẠ CUỐI</span>
-                                    <span
-                                        class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded group-hover:text-amber-300">READ
-                                        ►</span>
-                                </div>
-                            </div>
-
-                            <!-- Card 2 -->
-                            <div class="break-inside-avoid bg-slate-900 border-2 border-slate-700 hover:border-amber-400 rounded p-3 shadow transition-all duration-300 group cursor-pointer"
-                                onclick="openHumadaModal(this.querySelector('img'))">
-                                <div class="overflow-hidden rounded border border-slate-800 mb-3">
-                                    <img src="./assets/ThinhPrj/hs/content/2.jpg" alt="[HẠ CUỐI]"
-                                        class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
-                                        onerror="this.src='https://placehold.co/400x400/0f172a/fbbf24?text=Memory+02'"
-                                        data-title="[HẠ CUỐI]"
-                                        data-content="Đối với tôi mùa hạ là mùa buồn nhất của năm. Biết bao cuộc chia ly mang bao nỗi sầu vấn vương trong con tim...&#10;&#10;Đâu ai cản nổi bước đi của thời gian, đâu ai ngăn được hạ kia dừng lại mãi. Lòng này vẫn nuối tiếc khôn nguôi một mùa hạ đã qua, và một mùa hạ sắp qua. Dẫu thế nào, ta vẫn muốn gửi đến mùa hạ hôm nay vài lời thương nhớ: &quot;Này hạ cuối, ta sẽ nhớ người!&quot;">
-                                </div>
-                                <div
-                                    class="font-mono text-xs font-bold text-amber-300 flex items-center justify-between">
-                                    <span>#LOG_02: CHỈ CHÚNG TA</span>
-                                    <span
-                                        class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded group-hover:text-amber-300">READ
-                                        ►</span>
-                                </div>
-                            </div>
-
-                            <!-- Card 3 -->
-                            <div class="break-inside-avoid bg-slate-900 border-2 border-slate-700 hover:border-amber-400 rounded p-3 shadow transition-all duration-300 group cursor-pointer"
-                                onclick="openHumadaModal(this.querySelector('img'))">
-                                <div class="overflow-hidden rounded border border-slate-800 mb-3">
-                                    <img src="./assets/ThinhPrj/hs/content/3.jpg" alt="[VỀ ĐÂU GIỮA LỐI TƯƠNG TƯ]"
-                                        class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
-                                        onerror="this.src='https://placehold.co/400x350/0f172a/fbbf24?text=Memory+03'"
-                                        data-title="[VỀ ĐÂU GIỮA LỐI TƯƠNG TƯ]"
-                                        data-content="Chưa bao giờ, mình lại thấy sợ thích một người đến thế. Dường như khi người ta dần bị mất đi cảm giác an toàn, bị tổn thương quá nhiều... thì người ta sẽ sợ phải thích, phải yêu, phải thương một người.&#10;&#10;Yêu đơn phương, giống như đứng ở ngã ba với tín hiệu đèn vàng. Tiến thì sợ người ấy bật đèn đỏ, lùi thì sợ mình bỏ lỡ đèn xanh. Hãy thử mở lòng ra đi nào, biết đâu lại thấy cả bầu trời xanh đang đứng đợi cậu ở trước mắt kia!">
-                                </div>
-                                <div
-                                    class="font-mono text-xs font-bold text-amber-300 flex items-center justify-between">
-                                    <span>#LOG_03: GỬI EM</span>
-                                    <span
-                                        class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded group-hover:text-amber-300">READ
-                                        ►</span>
-                                </div>
-                            </div>
-
+                        <!-- Footer -->
+                        <div class="w-full bg-red-900 py-8 px-6 text-center text-white mt-4">
+                            <p class="text-sm md:text-base font-bold tracking-widest uppercase opacity-80 mb-2">Feel
+                                free to
+                                reach out</p>
+                            <p class="text-xs opacity-60">Created by Lê Hữu Thịnh</p>
                         </div>
-                    </div>
 
-                    <!-- 6. STAGE CLEAR FOOTER -->
-                    <div class="border-t-2 border-slate-800 pt-8 text-center space-y-2">
-                        <p class="text-xs md:text-sm font-bold tracking-widest text-[#22d3ee] uppercase">
-                            ★★★ STAGE CLEAR: MEMORIES PRESERVED ★★★
-                        </p>
-                        <p class="text-[10px] text-slate-500 tracking-wider">
-                            SYSTEM ARCHIVED BY LÊ HỮU THỊNH — CO-FOUNDER & CONTENT CONTRIBUTOR
-                        </p>
                     </div>
-
                 </div>
-            </div>
 
+                <!-- HUMADA STORY PHOTO MODAL (đặt ngoài card overflow-hidden để fixed hoạt động đúng) -->
+                <div id="humadaModal" class="hidden fixed inset-0 z-[250] items-center justify-center bg-black/80 p-4"
+                    onclick="if(event.target === this) closeHumadaModal()">
+                    <div
+                        class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden relative">
+
+                        <!-- Close button -->
+                        <button onclick="closeHumadaModal()"
+                            class="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white text-gray-700 rounded-full w-9 h-9 flex items-center justify-center shadow-md transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+
+                        <!-- Ảnh bên trái -->
+                        <div class="md:w-1/2 bg-black flex items-center justify-center">
+                            <img id="humadaModalImg" src="" alt=""
+                                class="w-full h-full object-contain max-h-[50vh] md:max-h-[90vh]">
+                        </div>
+
+                        <!-- Nội dung bên phải -->
+                        <div class="md:w-1/2 p-6 flex flex-col overflow-y-auto">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-[#ff5252] flex items-center justify-center text-white font-bold">
+                                    H
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800 text-sm">Humada Stories</p>
+                                    <p class="text-xs text-gray-400">Photo Album</p>
+                                </div>
+                            </div>
+                            <h4 id="humadaModalTitle" class="text-lg font-bold text-[#ff5252] mb-2"></h4>
+                            <p id="humadaModalContent"
+                                class="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
 
         <!-- MODAL UI: PROJECT DETAILS -->
@@ -1533,42 +1935,6 @@
                             <div id="modal-links" class="flex flex-wrap gap-3"></div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- HUMADA STORY PHOTO MODAL (RETRO STYLE) -->
-        <div id="humadaModal" class="hidden fixed inset-0 z-[250] items-center justify-center bg-black/90 p-4"
-            onclick="if(event.target === this) closeHumadaModal()">
-            <div
-                class="bg-[#0f172a] border-4 border-slate-700 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col md:flex-row overflow-hidden relative font-mono">
-                <button onclick="closeHumadaModal()"
-                    class="absolute top-3 right-3 z-10 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full w-9 h-9 flex items-center justify-center border-2 border-slate-600 shadow-md transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <div class="md:w-1/2 bg-black flex items-center justify-center border-r-2 border-slate-700 p-2">
-                    <img id="humadaModalImg" src="" alt=""
-                        class="w-full h-full object-contain max-h-[50vh] md:max-h-[90vh] rounded">
-                </div>
-                <div class="md:w-1/2 p-6 flex flex-col overflow-y-auto">
-                    <div class="flex items-center gap-3 mb-4 border-b-2 border-slate-800 pb-3">
-                        <div
-                            class="w-10 h-10 rounded border-2 border-[#ff4fa3] bg-slate-900 flex items-center justify-center text-[#ff4fa3] font-black animate-pulse">
-                            H
-                        </div>
-                        <div>
-                            <p class="font-bold text-slate-300 text-sm tracking-widest uppercase">Humada Stories</p>
-                            <p class="text-[10px] text-amber-400">ARCHIVE DATA ENTRY</p>
-                        </div>
-                    </div>
-                    <h4 id="humadaModalTitle" class="text-base md:text-lg font-black text-[#22d3ee] mb-4 uppercase">
-                    </h4>
-                    <p id="humadaModalContent"
-                        class="text-sm text-slate-400 leading-relaxed whitespace-pre-line font-sans"></p>
                 </div>
             </div>
         </div>
@@ -1660,11 +2026,6 @@
                     targetView.scrollTop = 0;
                 }
 
-                // Initialize the Arcade slider immediately when navigating to the Humada Retro view
-                if (targetViewId === 'view-project-humada') {
-                    initHumadaSlider();
-                }
-                
                 // Khởi động Animation cho trang About Me
                 if (targetViewId === 'view-about') {
                     playAboutAnimation();
@@ -1735,13 +2096,33 @@
                 }
             }
 
-            // === HUMADA SCRIPT (Slider logic & Modals) ===
-            function scrollThumbSlider(id, delta) {
-                const el = document.getElementById(id);
-                if (el) el.scrollBy({ left: delta, behavior: 'smooth' });
-                playHoverSound();
+            // === HUMADA PROJECT MODAL (nội dung nhúng trực tiếp) ===
+            const humadaProjectModal = document.getElementById('humada-project-modal');
+            let humadaSliderInitialized = false;
+
+            function openHumadaProjectModal(event) {
+                if (event) event.preventDefault();
+                playSelectSound();
+                humadaProjectModal.classList.remove('hidden');
+                humadaProjectModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+                if (!humadaSliderInitialized) {
+                    initHumadaSlider();
+                    humadaSliderInitialized = true;
+                }
             }
 
+            function closeHumadaProjectModal() {
+                playBackSound();
+                humadaProjectModal.classList.add('hidden');
+                humadaProjectModal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+
+            window.openHumadaProjectModal = openHumadaProjectModal;
+            window.closeHumadaProjectModal = closeHumadaProjectModal;
+
+            // --- Modal xem chi tiết ảnh (bên trong Humada's Stories) ---
             function openHumadaModal(imgEl) {
                 const hModal = document.getElementById('humadaModal');
                 if (!hModal) return;
@@ -1752,7 +2133,6 @@
                 document.getElementById('humadaModalContent').textContent = imgEl.dataset.content || '';
                 hModal.classList.remove('hidden');
                 hModal.classList.add('flex');
-                document.body.style.overflow = 'hidden';
             }
 
             function closeHumadaModal() {
@@ -1761,9 +2141,9 @@
                 playBackSound();
                 hModal.classList.add('hidden');
                 hModal.classList.remove('flex');
-                document.body.style.overflow = '';
             }
 
+            // --- Slider ngang cho "Humada's View" ---
             function initHumadaSlider() {
                 const humadaView = document.querySelector('.humada-view-slider');
                 if (!humadaView || humadaView.dataset.initialized) return;
@@ -1780,7 +2160,7 @@
                     activeV = ((index % slidesV.length) + slidesV.length) % slidesV.length;
                     trackV.style.transform = `translateX(-${activeV * 100}%)`;
                     dotsV.querySelectorAll('button').forEach((dot, di) => {
-                        dot.style.background = di === activeV ? '#22d3ee' : 'rgba(255,255,255,0.2)';
+                        dot.style.background = di === activeV ? '#ff5252' : 'rgba(0,0,0,0.15)';
                         dot.style.transform = di === activeV ? 'scale(1.2)' : 'scale(1)';
                     });
                 }
@@ -1788,7 +2168,7 @@
                 slidesV.forEach((_, i) => {
                     const dot = document.createElement('button');
                     dot.type = 'button';
-                    dot.style.cssText = "width:10px; height:10px; border-radius:2px; background:rgba(255,255,255,0.2); transition:all 0.2s;";
+                    dot.style.cssText = "width:10px; height:10px; border-radius:2px; background:rgba(0,0,0,0.15); transition:all 0.2s;";
                     dot.addEventListener('click', () => { playHoverSound(); updateHumadaView(i); });
                     dotsV.appendChild(dot);
                 });
@@ -1811,6 +2191,17 @@
                 startHumadaViewAutoplay();
             }
 
+            // --- Slider ngang kéo tay (dùng cho "Đó là lần đầu..." / "Những bước cuối") ---
+            function scrollThumbSlider(id, delta) {
+                const el = document.getElementById(id);
+                if (el) el.scrollBy({ left: delta, behavior: 'smooth' });
+                playHoverSound();
+            }
+
+            window.openHumadaModal = openHumadaModal;
+            window.closeHumadaModal = closeHumadaModal;
+            window.scrollThumbSlider = scrollThumbSlider;
+
             // === EVENT LISTENERS ===
             document.addEventListener('DOMContentLoaded', () => {
                 updateMusicIcon();
@@ -1827,13 +2218,10 @@
                 if (e.key === 'Escape' || e.key === 'Esc') {
                     const hModal = document.getElementById('humadaModal');
                     if (hModal && !hModal.classList.contains('hidden')) closeHumadaModal();
+                    else if (humadaProjectModal && !humadaProjectModal.classList.contains('hidden')) closeHumadaProjectModal();
                     else if (modal && !modal.classList.contains('hidden')) closeModal();
-                    else if (document.getElementById('view-project-humada').classList.contains('active')) switchView('view-all-projects', true);
                 }
             });
-
-            window.openHumadaModal = openHumadaModal;
-            window.scrollThumbSlider = scrollThumbSlider;
         </script>
     </div>
 </body>

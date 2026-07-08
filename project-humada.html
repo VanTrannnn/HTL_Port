@@ -1,5 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humada's Stories | Lê Hữu Thịnh</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2">
+
+    <style>
+        html {
+            overflow-y: auto !important;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f1f5f9;
+            font-family: 'Space Grotesk', monospace;
+            min-height: 100vh;
+            height: auto !important;
+            color: #0f172a;
+            background-image: radial-gradient(circle at center, #f8fafc 0%, #cbd5e1 100%);
+            display: block !important;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+
+        .page-wrap {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        /* Custom scrollbar to match the rest of the site */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrap">
                 <div class="flex justify-between items-center mb-6 py-3 border-b border-gray-800 shrink-0">
-                    <button class="btn-back text-xs md:text-sm" onclick="switchView('view-all-projects', true)">
+                    <button class="btn-back text-xs md:text-sm" onclick="goBack()">
                         <i class="fa-solid fa-caret-left mr-2"></i> BACK
                     </button>
                 </div>
@@ -709,3 +775,168 @@ Bởi chăng, tình càng đau... thì càng đậm, tình càng đắng... sẽ
 
                     </div>
                 </div>
+    </div>
+
+    <script>
+        // === AUDIO SYSTEM (nhẹ, giống trang chính) ===
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playTone(freq, type, duration, vol) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration);
+        }
+
+        function playHoverSound() { if (audioCtx) playTone(440, 'square', 0.1, 0.02); }
+        function playSelectSound() {
+            initAudio();
+            playTone(600, 'square', 0.1, 0.05);
+            setTimeout(() => playTone(800, 'square', 0.15, 0.05), 100);
+        }
+        function playBackSound() {
+            initAudio();
+            playTone(300, 'sawtooth', 0.1, 0.05);
+            setTimeout(() => playTone(200, 'sawtooth', 0.15, 0.05), 100);
+        }
+
+        // === NAVIGATION ===
+        const isEmbedded = window.self !== window.top;
+
+        function goBack() {
+            playBackSound();
+            if (isEmbedded) {
+                try { window.parent.postMessage('closeHumadaModal', '*'); } catch (e) { }
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // === HUMADA MODAL (chi tiết ảnh) ===
+        function openHumadaModal(imgEl) {
+            const hModal = document.getElementById('humadaModal');
+            if (!hModal) return;
+            playSelectSound();
+            document.getElementById('humadaModalImg').src = imgEl.src;
+            document.getElementById('humadaModalImg').alt = imgEl.alt;
+            document.getElementById('humadaModalTitle').textContent = imgEl.dataset.title || imgEl.alt;
+            document.getElementById('humadaModalContent').textContent = imgEl.dataset.content || '';
+            hModal.classList.remove('hidden');
+            hModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeHumadaModal() {
+            const hModal = document.getElementById('humadaModal');
+            if (!hModal) return;
+            playBackSound();
+            hModal.classList.add('hidden');
+            hModal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        // === HUMADA'S VIEW SLIDER ===
+        function initHumadaSlider() {
+            const humadaView = document.querySelector('.humada-view-slider');
+            if (!humadaView || humadaView.dataset.initialized) return;
+            humadaView.dataset.initialized = "true";
+
+            const trackV = humadaView.querySelector('.humada-view-track');
+            const slidesV = Array.from(humadaView.querySelectorAll('.humada-view-slide'));
+            const prevV = humadaView.querySelector('.humada-view-prev');
+            const nextV = humadaView.querySelector('.humada-view-next');
+            const dotsV = humadaView.querySelector('.humada-view-dots');
+            let activeV = 0;
+
+            function updateHumadaView(index) {
+                activeV = ((index % slidesV.length) + slidesV.length) % slidesV.length;
+                trackV.style.transform = `translateX(-${activeV * 100}%)`;
+                dotsV.querySelectorAll('button').forEach((dot, di) => {
+                    dot.style.background = di === activeV ? '#ff5252' : 'rgba(0,0,0,0.15)';
+                    dot.style.transform = di === activeV ? 'scale(1.2)' : 'scale(1)';
+                });
+            }
+
+            slidesV.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.style.cssText = "width:10px; height:10px; border-radius:2px; background:rgba(0,0,0,0.15); transition:all 0.2s;";
+                dot.addEventListener('click', () => { playHoverSound(); updateHumadaView(i); });
+                dotsV.appendChild(dot);
+            });
+
+            prevV.addEventListener('click', () => { playHoverSound(); updateHumadaView(activeV - 1); });
+            nextV.addEventListener('click', () => { playHoverSound(); updateHumadaView(activeV + 1); });
+            updateHumadaView(0);
+
+            let humadaViewAutoplay = null;
+            function startHumadaViewAutoplay() {
+                stopHumadaViewAutoplay();
+                humadaViewAutoplay = setInterval(() => updateHumadaView(activeV + 1), 3500);
+            }
+            function stopHumadaViewAutoplay() {
+                if (humadaViewAutoplay) clearInterval(humadaViewAutoplay);
+            }
+
+            humadaView.addEventListener('mouseenter', stopHumadaViewAutoplay);
+            humadaView.addEventListener('mouseleave', startHumadaViewAutoplay);
+            startHumadaViewAutoplay();
+        }
+
+        // === THUMBNAIL SLIDER (project timeline) ===
+        function scrollThumbSlider(id, delta) {
+            const el = document.getElementById(id);
+            if (el) el.scrollBy({ left: delta, behavior: 'smooth' });
+            playHoverSound();
+        }
+
+        // === EVENT LISTENERS ===
+        document.addEventListener('DOMContentLoaded', () => {
+            initHumadaSlider();
+            document.body.addEventListener('click', initAudio, { once: true });
+            document.querySelectorAll('.cursor-pointer, .btn-back, a, button').forEach(el => {
+                el.addEventListener('mouseenter', playHoverSound);
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                const hModal = document.getElementById('humadaModal');
+                if (hModal && !hModal.classList.contains('hidden')) {
+                    closeHumadaModal();
+                } else if (isEmbedded) {
+                    try { window.parent.postMessage('closeHumadaModal', '*'); } catch (e) { }
+                }
+            }
+        });
+
+        // Đổi nhãn nút BACK -> CLOSE khi trang được nhúng trong modal (iframe)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (isEmbedded) {
+                document.querySelectorAll('.btn-back').forEach(btn => {
+                    btn.innerHTML = '<i class="fa-solid fa-xmark mr-2"></i> CLOSE';
+                });
+            }
+        });
+
+        window.openHumadaModal = openHumadaModal;
+        window.closeHumadaModal = closeHumadaModal;
+        window.scrollThumbSlider = scrollThumbSlider;
+        window.goBack = goBack;
+    </script>
+</body>
+
+</html>
