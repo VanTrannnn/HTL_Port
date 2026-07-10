@@ -9,7 +9,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Press+Start+2P&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=2">
     
@@ -413,7 +413,10 @@
         .dino-runner {
             --grass-height: 48%;
             --scroll-duration: 2.8s;
-            --scroll-distance: -1000px;
+            /* Khoảng cách scroll giờ LUÔN LÀ BỘI SỐ của --tile-width bên dưới,
+               nên nền sẽ lặp lại khít, không còn bị khựng/giật mỗi vòng lặp */
+            --tile-width: 1100px;
+            --scroll-distance: -1100px;
             min-height: 220px;
             padding-bottom: 2.5rem;
             overflow: hidden;
@@ -428,8 +431,8 @@
         }
 
         .dino-character {
-            width: 130px;
-            height: 130px;
+            width: 145px;
+            height: 145px;
             object-fit: cover;
             object-position: top;
             border-radius: 16px;
@@ -439,7 +442,7 @@
         }
 
         @media (min-width: 768px) {
-            .dino-character { width: 180px; height: 180px; }
+            .dino-character { width: 200px; height: 200px; }
         }
 
         @keyframes dinoHop {
@@ -458,29 +461,28 @@
         }
 
         /* Background Parallax System */
+        /* Bầu trời: đổi từ ảnh xanh gắt sang gradient pastel nhẹ, hài hoà với
+           tông màu chủ đạo (slate/trắng) của toàn trang thay vì bị "lạc quẻ" */
         .dino-bg-sky {
             position: absolute;
             inset: 0;
             z-index: 0;
-            background-color: #e0f2fe;
-            background-image: url('./assets/sky.png');
-            background-repeat: repeat-x;
-            background-size: auto 100%;
-            background-position-y: center;
-            animation: bgScrollLeft var(--scroll-duration) linear infinite;
+            background-image: linear-gradient(180deg, #f4fbff 0%, #dff2ff 45%, #cdeafd 100%);
         }
 
-        /* 1 đám mây bay ngang */
+        /* Mây: lặp liên tục (repeat-x) thay vì chỉ 1 đám bay qua rồi mất,
+           kích thước to hơn để bầu trời trông đầy đặn hơn */
         .dino-bg-clouds {
             position: absolute;
             inset: 0;
             z-index: 1;
-            background-image: url('./assets/clouds.png');
-            background-repeat: no-repeat;
-            background-size: 260px auto; 
-            background-position-y: 28%;
+            background-image: url('./assets/clouds.png'), url('./assets/clouds.png');
+            background-repeat: repeat-x, repeat-x;
+            background-size: 550px auto, 380px auto;
+            background-position: 0 6%, 140px 32%;
+            opacity: 0.9;
             pointer-events: none;
-            animation: cloudMove 15s linear infinite;
+            animation: bgScrollLeft calc(var(--scroll-duration) * 3) linear infinite;
         }
 
         .dino-bg-grass {
@@ -492,7 +494,9 @@
             z-index: 4;
             background-image: url('./assets/grass.png');
             background-repeat: repeat-x;
-            background-size: auto 100%;
+            /* Bề rộng tile CỐ ĐỊNH (không còn "auto") khớp với --tile-width,
+               nên khi animation lặp về 0 thì hình khít tuyệt đối, hết giật/khựng */
+            background-size: var(--tile-width) 100%;
             background-position-y: -50%;
             animation: bgScrollLeft var(--scroll-duration) linear infinite;
         }
@@ -501,20 +505,96 @@
             from { background-position-x: 0; }
             to { background-position-x: var(--scroll-distance); }
         }
-        
-        @keyframes cloudMove {
-            0% { background-position-x: 100vw; }
-            100% { background-position-x: -250px; }
-        }
 
         /* --- RPG ABOUT CSS --- */
         .rpg-box {
+            position: relative;
             background-color: #ffffff;
-            border: 2px solid #2d3748;
-            border-radius: 8px;
-            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+            background-image: repeating-linear-gradient(
+                to bottom,
+                rgba(26, 32, 44, 0.045) 0px,
+                rgba(26, 32, 44, 0.045) 1px,
+                transparent 1px,
+                transparent 3px
+            ); /* vệt scanline mờ kiểu màn hình CRT */
+            border: 3px solid #1a202c;
+            border-radius: 0; /* bỏ bo tròn -> góc vát pixel cho giống khung thoại game */
+            clip-path: polygon(
+                10px 0, calc(100% - 10px) 0, 100% 10px,
+                100% calc(100% - 10px), calc(100% - 10px) 100%,
+                10px 100%, 0 calc(100% - 10px), 0 10px
+            );
+            box-shadow:
+                5px 5px 0px rgba(0, 0, 0, 0.3),
+                inset 0 0 0 2px #ffffff,
+                inset 0 0 0 3px #1a202c,
+                0 0 16px rgba(34, 211, 238, 0.18); /* viền phát sáng nhẹ kiểu HUD */
             color: #1a202c;
             padding: clamp(0.5rem, 1.5vh, 1rem) clamp(0.8rem, 2vw, 1.5rem);
+        }
+
+        /* Tab góc nhỏ kiểu HUD, xen kẽ 2 màu thương hiệu, nhấp nháy nhẹ cho sống động */
+        .rpg-box::before,
+        .rpg-box::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #22d3ee;
+            border: 2px solid #1a202c;
+            z-index: 2;
+            animation: hudTabPulse 2.4s ease-in-out infinite;
+        }
+
+        .rpg-box::before {
+            top: 4px;
+            left: 4px;
+        }
+
+        .rpg-box::after {
+            bottom: 4px;
+            right: 4px;
+            background-color: #ff4fa3;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes hudTabPulse {
+            0%, 100% { box-shadow: 0 0 0 rgba(34, 211, 238, 0); }
+            50% { box-shadow: 0 0 6px 1px rgba(34, 211, 238, 0.85); }
+        }
+
+        /* Font pixel 8-bit đồng bộ cho tiêu đề section ở thanh header mọi trang (About/Experience/Awards/...) */
+        .pixel-title {
+            font-family: 'Press Start 2P', 'Space Grotesk', monospace !important;
+            letter-spacing: 0.5px !important;
+            font-size: clamp(0.5rem, 1.5vw, 0.85rem) !important;
+            line-height: 1.5 !important;
+        }
+
+        /* Font pixel cho tên nhân vật ở màn hình chính (home) */
+        .hero-title {
+            font-family: 'Press Start 2P', 'Space Grotesk', monospace !important;
+            letter-spacing: 1px !important;
+            line-height: 1.7 !important;
+            font-size: clamp(1.1rem, 4.5vw, 2.4rem) !important;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        /* Font pixel 8-bit riêng cho tên nhân vật + tiêu đề bảng chỉ số, giữ phần mô tả/danh sách vẫn dùng Space Grotesk để dễ đọc */
+        #about-left-panel h2,
+        #about-right-panel h3 {
+            font-family: 'Press Start 2P', 'Space Grotesk', monospace !important;
+            letter-spacing: 0.5px !important;
+            line-height: 1.6 !important;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        #about-left-panel h2 {
+            font-size: clamp(0.75rem, 1.7vh, 1.15rem) !important;
+        }
+
+        #about-right-panel h3 {
+            font-size: clamp(0.6rem, 1.3vh, 0.85rem) !important;
         }
 
         .rpg-box-yellow {
@@ -531,7 +611,7 @@
             text-transform: uppercase;
             letter-spacing: 1.1px;
             font-weight: 800;
-            color: #c2703d;
+            color: #ff4fa3;
             margin-top: clamp(0.2rem, 0.6vh, 0.4rem);
             margin-bottom: clamp(0.1rem, 0.3vh, 0.25rem);
         }
@@ -550,7 +630,7 @@
             gap: 0.5rem;
             font-size: clamp(0.5rem, 1.2vh, 0.8rem);
             font-weight: 700;
-            color: #23272f;
+            color: #1a202c;
             margin-bottom: 2px;
         }
 
@@ -562,7 +642,7 @@
 
         .rpg-skill-name span:last-child {
             flex-shrink: 0;
-            color: #9a9186;
+            color: #94a3b8;
             font-weight: 700;
             font-size: clamp(0.45rem, 1.1vh, 0.75rem);
         }
@@ -573,9 +653,10 @@
         }
 
         .rpg-skill-segment {
-            height: clamp(3px, 0.7vh, 6px);
+            height: clamp(4px, 0.9vh, 7px);
             flex-grow: 1;
-            background-color: #e4dcc8;
+            background-color: #ffffff;
+            border: 1.5px solid #1a202c; /* đồng bộ màu viền với .rpg-box để 2 cột nhìn cùng 1 hệ */
             border-radius: 2px;
         }
 
@@ -591,10 +672,12 @@
 
         .rpg-skill-segment.filled-dark {
             background-color: #1e2733;
+            border-color: #1e2733;
         }
 
         .rpg-skill-segment.filled-orange {
-            background-color: #c2703d;
+            background-color: #ff4fa3;
+            border-color: #ff4fa3;
         }
 
         @keyframes slideInLeftBox {
@@ -634,30 +717,48 @@
 
         /* Nhân vật ẩn đi cho tới khi đèn bật xong mới fade-in (idle ngay từ đầu) */
         #about-character-img {
-            --char-y: 18vh; /* Đẩy nhân vật xuống thấp gần mặt sàn */
+            --char-y: 12vh; /* Đẩy nhân vật xuống thêm để chân chạm đúng dải thảm (self-end không đủ vì thảm nằm khá thấp, gần sát nav dưới) */
             --char-scale: 1.6; /* Tăng size gấp đôi trên desktop */
             transform: translateY(var(--char-y)) scale(var(--char-scale));
             cursor: pointer;
-            transform-origin: bottom center;
+            transform-origin: bottom center; /* Scale từ chân lên, chân luôn đứng yên 1 chỗ */
             image-rendering: pixelated; /* Giữ độ nét cho nét vẽ pixel art khi phóng to */
             z-index: 20; /* Đảm bảo nhân vật luôn đứng trước các bảng thông tin nếu có đè lên */
+            /* Hạ nhẹ tông màu/độ bão hoà để nhân vật hoà vào ánh sáng xanh lạnh của căn phòng,
+               thay vì nổi bần bật như dán đè lên nền */
+            filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.45)) saturate(0.88) brightness(0.96) contrast(1.03);
         }
 
         @media (max-width: 768px) {
             #about-character-img {
                 --char-scale: 1.35; /* Tăng size vừa phải trên mobile để không tràn viền */
-                --char-y: 4vh; /* Đẩy nhẹ xuống trên mobile */
+                --char-y: 6vh; /* Mobile layout xếp cột dọc nên thảm ở vị trí khác — chỉnh nhẹ hơn, có thể cần tinh chỉnh thêm */
             }
         }
 
         #about-character-img.char-hidden {
             opacity: 0;
-            transform: translateY(calc(var(--char-y) + 20px)) scale(var(--char-scale));
+            transform: translateY(calc(var(--char-y) + 12px)) scale(calc(var(--char-scale) - 0.05));
+        }
+
+        /* Bóng đổ dưới chân nhân vật để trông như đang thực sự đứng trên thảm,
+           không phải bị dán chồng lên nền */
+        .about-character-shadow {
+            position: absolute;
+            left: 50%;
+            bottom: 0.25rem;
+            width: 42%;
+            aspect-ratio: 3.2 / 1;
+            transform: translateX(-50%);
+            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.18) 55%, rgba(0, 0, 0, 0) 80%);
+            filter: blur(2px);
+            z-index: 15;
+            pointer-events: none;
         }
 
         /* Hover vào nhân vật: nổi bật lên 1 xíu + chạy hoạt ảnh (đổi sang gif appear) */
         #about-character-img:hover {
-            filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 20px rgba(34, 211, 238, 0.6)) brightness(1.08);
+            filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 20px rgba(34, 211, 238, 0.6)) saturate(0.95) brightness(1.04);
             transform: translateY(var(--char-y)) scale(calc(var(--char-scale) + 0.06));
         }
     </style>
@@ -701,7 +802,7 @@
                     <!-- Tiêu đề -->
                     <div class="text-center mt-8 mb-6 shrink-0 relative z-10">
                         <h2 class="title-presentation hero-subtitle text-sm md:text-xl mb-2 text-slate-600">MARKETING & PLANNING PORTFOLIO</h2>
-                        <h1 class="title-main neon-title hero-title text-3xl md:text-5xl font-black tracking-widest text-slate-900 drop-shadow-sm">LÊ HỮU THỊNH</h1>
+                        <h1 class="hero-title text-3xl md:text-5xl font-black tracking-widest text-slate-900 drop-shadow-sm">LE HUU THINH</h1>
                         <p class="text-[#ff4fa3] font-bold tracking-widest uppercase text-xs md:text-sm mt-2">Marketing-driven Student & Planner</p>
                     </div>
 
@@ -709,14 +810,14 @@
                     <div class="dino-bg-grass absolute bottom-0 left-0 right-0 h-[48%] z-4 pointer-events-none"></div>
 
                     <!-- Nhân vật Dino đuổi theo -->
-                    <div class="absolute bottom-[3%] left-[42%] -translate-x-1/2 z-10">
+                    <div class="absolute bottom-[0.5%] left-[38%] -translate-x-1/2 z-10">
                         <div class="dino-character-wrap relative" onclick="switchView('view-about')">
                             <img src="./assets/dino-run.gif" alt="Lê Hữu Thịnh" class="dino-character !bg-transparent !border-0 !shadow-none filter drop-shadow-lg" onerror="this.src='https://placehold.co/150x150/ff4fa3/ffffff?text=RUN'">
                         </div>
                     </div>
 
                     <!-- Nhân vật Job bị rượt -->
-                    <div class="absolute bottom-[3%] left-[55%] -translate-x-1/2 z-10">
+                    <div class="absolute bottom-[0.5%] left-[60%] -translate-x-1/2 z-10">
                         <div class="relative dino-character-wrap">
                             <img src="./assets/job-run.gif" alt="Dream Job" class="dino-character !bg-transparent !border-0 !shadow-none filter drop-shadow-lg" onerror="this.src='https://placehold.co/150x150/22d3ee/ffffff?text=JOB'">
                         </div>
@@ -748,7 +849,7 @@
                     <button class="btn-back text-xs md:text-sm !text-slate-200 !border-slate-600 hover:!bg-slate-800" onclick="switchView('view-select', true)">
                         <i class="fa-solid fa-caret-left mr-2"></i> HOME
                     </button>
-                    <div class="text-[#22d3ee] font-bold tracking-widest text-sm md:text-xl">ABOUT ME</div>
+                    <div class="pixel-title text-[#22d3ee] font-bold tracking-widest text-sm md:text-xl">ABOUT ME</div>
                 </div>
 
                 <!-- Main Content RPG: chiếm hết phần còn lại, không cuộn — nhân vật tự co giãn theo chiều cao còn trống -->
@@ -758,7 +859,7 @@
                     <div id="about-left-panel" class="w-full lg:w-[30%] max-h-full flex flex-col gap-2 lg:gap-3 justify-center slide-in-left-box overflow-y-auto portfolio-scroll">
                         <!-- Box 1: Tên -->
                         <div class="rpg-box text-center shrink-0">
-                            <h2 class="font-black tracking-widest uppercase" style="font-size: clamp(1.1rem, 2.5vh, 1.8rem);">LÊ HỮU THỊNH</h2>
+                            <h2 class="font-black tracking-widest uppercase" style="font-size: clamp(1.1rem, 2.5vh, 1.8rem);">LE HUU THINH</h2>
                             <p class="text-slate-500 font-bold uppercase tracking-wider mt-1" style="font-size: clamp(0.5rem, 1.1vh, 0.75rem);">MARKETING-DRIVEN STUDENT</p>
                         </div>
                         
@@ -788,7 +889,8 @@
                     </div>
 
                     <!-- CỘT GIỮA: NHÂN VẬT (tự co giãn hết chiều cao còn trống -> luôn to tối đa mà không tràn màn hình) -->
-                    <div class="w-full lg:w-[28%] flex justify-center items-end order-first lg:order-none relative shrink-0 z-10 pb-2">
+                    <div class="w-full lg:w-[28%] flex justify-center items-end lg:self-end order-first lg:order-none relative shrink-0 z-10 pb-2 lg:pb-0">
+                        <div class="about-character-shadow"></div>
                         <img id="about-character-img" src="./assets/char-idle.gif" alt="Character"
                             class="char-hidden w-auto max-w-[250px] lg:max-w-[400px] h-auto max-h-[45vh] lg:max-h-[65vh] object-contain object-bottom filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-all duration-500"
                             onmouseenter="this.src='./assets/char-appear.gif'; if (typeof playHoverSound === 'function') playHoverSound();"
@@ -799,8 +901,8 @@
                     <!-- CỘT PHẢI: SKILLS (2 box xếp chồng, thu gọn để fit màn hình không cần cuộn) -->
                     <div id="about-right-panel" class="w-full lg:w-[36%] max-h-full flex flex-col gap-2 lg:gap-2.5 justify-center slide-in-right-box overflow-y-auto portfolio-scroll">
                         <!-- Stats Box 1 -->
-                        <div class="rpg-box-yellow">
-                            <div class="flex justify-between items-end border-b-2 border-[#d2d6dc] pb-1 mb-1">
+                        <div class="rpg-box">
+                            <div class="flex justify-between items-end border-b-2 border-slate-200 pb-1 mb-1">
                                 <div>
                                     <h3 class="text-sm font-black text-[#1a202c] uppercase tracking-widest">Character Stats</h3>
                                     <p class="text-[8px] text-[#718096] font-bold tracking-wider">Hữu Thịnh — Skill sheet</p>
@@ -813,12 +915,6 @@
                                 <div class="rpg-skill-name"><span>Excel (PivotTable, XLOOKUP)</span><span>8/10</span></div>
                                 <div class="rpg-skill-bar-container">
                                     <div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
-                                </div>
-                            </div>
-                            <div class="rpg-skill-row">
-                                <div class="rpg-skill-name"><span>PowerPoint</span><span>9/10</span></div>
-                                <div class="rpg-skill-bar-container">
-                                    <div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment"></div>
                                 </div>
                             </div>
                             <div class="rpg-skill-row">
@@ -843,15 +939,15 @@
                                 </div>
                             </div>
                             <div class="rpg-skill-row">
-                                <div class="rpg-skill-name"><span>English</span><span>6/10</span></div>
+                                <div class="rpg-skill-name"><span>English</span><span>7/10</span></div>
                                 <div class="rpg-skill-bar-container">
-                                    <div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
+                                    <div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment filled-orange"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Stats Box 2 -->
-                        <div class="rpg-box-yellow">
+                        <div class="rpg-box">
                             <!-- Marketing -->
                             <div class="rpg-skill-title !mt-0">Marketing</div>
                             <div class="rpg-skill-row">
@@ -866,13 +962,6 @@
                                     <div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
                                 </div>
                             </div>
-                            <div class="rpg-skill-row">
-                                <div class="rpg-skill-name"><span>KPI tracking & reporting</span><span>8/10</span></div>
-                                <div class="rpg-skill-bar-container">
-                                    <div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
-                                </div>
-                            </div>
-
                             <!-- Data & Analysis -->
                             <div class="rpg-skill-title">Data & Analysis</div>
                             <div class="rpg-skill-row">
@@ -882,36 +971,9 @@
                                 </div>
                             </div>
                             <div class="rpg-skill-row">
-                                <div class="rpg-skill-name"><span>Data visualization</span><span>7/10</span></div>
-                                <div class="rpg-skill-bar-container">
-                                    <div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
-                                </div>
-                            </div>
-                            <div class="rpg-skill-row">
                                 <div class="rpg-skill-name"><span>Market & consumer research</span><span>7/10</span></div>
                                 <div class="rpg-skill-bar-container">
                                     <div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
-                                </div>
-                            </div>
-
-                            <!-- Soft Skills -->
-                            <div class="rpg-skill-title">Soft Skills</div>
-                            <div class="rpg-skill-row">
-                                <div class="rpg-skill-name"><span>Cross-functional coordination</span><span>8/10</span></div>
-                                <div class="rpg-skill-bar-container">
-                                    <div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
-                                </div>
-                            </div>
-                            <div class="rpg-skill-row">
-                                <div class="rpg-skill-name"><span>Stakeholder management</span><span>8/10</span></div>
-                                <div class="rpg-skill-bar-container">
-                                    <div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
-                                </div>
-                            </div>
-                            <div class="rpg-skill-row">
-                                <div class="rpg-skill-name"><span>Result-oriented</span><span>8/10</span></div>
-                                <div class="rpg-skill-bar-container">
-                                    <div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment filled-dark"></div><div class="rpg-skill-segment"></div><div class="rpg-skill-segment"></div>
                                 </div>
                             </div>
                         </div>
@@ -935,7 +997,7 @@
                     <button class="btn-back text-xs md:text-sm" onclick="switchView('view-select', true)">
                         <i class="fa-solid fa-caret-left mr-2"></i> HOME
                     </button>
-                    <div class="text-[#ff4fa3] font-bold tracking-widest text-sm md:text-xl">EXPERIENCE & EDUCATION
+                    <div class="pixel-title text-[#ff4fa3] font-bold tracking-widest text-sm md:text-xl">EXPERIENCE & EDUCATION
                     </div>
                 </div>
 
@@ -1028,7 +1090,7 @@
                     <button class="btn-back text-xs md:text-sm" onclick="switchView('view-select', true)">
                         <i class="fa-solid fa-caret-left mr-2"></i> HOME
                     </button>
-                    <div class="text-[#ff4fa3] font-bold tracking-widest text-sm md:text-xl">HONORS & AWARDS</div>
+                    <div class="pixel-title text-[#ff4fa3] font-bold tracking-widest text-sm md:text-xl">HONORS & AWARDS</div>
                 </div>
 
                 <div class="max-w-3xl mx-auto w-full">
@@ -1070,7 +1132,7 @@
                     <button class="btn-back text-xs md:text-sm" onclick="switchView('view-select', true)">
                         <i class="fa-solid fa-caret-left mr-2"></i> HOME
                     </button>
-                    <div class="text-[#ff4fa3] font-bold tracking-widest text-sm md:text-xl">EXTRA-CURRICULAR</div>
+                    <div class="pixel-title text-[#ff4fa3] font-bold tracking-widest text-sm md:text-xl">EXTRA-CURRICULAR</div>
                 </div>
 
                 <div
@@ -1116,7 +1178,7 @@
                     <button class="btn-back text-xs md:text-sm" onclick="switchView('view-select', true)">
                         <i class="fa-solid fa-caret-left mr-2"></i> HOME
                     </button>
-                    <div class="text-[#ff4fa3] font-bold tracking-widest text-sm md:text-xl">SELECTED PROJECTS</div>
+                    <div class="pixel-title text-[#ff4fa3] font-bold tracking-widest text-sm md:text-xl">SELECTED PROJECTS</div>
                 </div>
 
                 <div class="w-full max-w-6xl pb-8 shrink-0 mt-4 md:mt-6">
